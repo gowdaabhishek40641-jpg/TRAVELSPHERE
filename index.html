@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -13,19 +14,24 @@
 
     <!-- Navigation -->
     <nav>
+
         <div class="logo">
-            ✈ TravelSphere
+            <span>✈</span>
+            TravelSphere
         </div>
 
         <div class="nav-links">
+
             <a href="#home">Home</a>
             <a href="#explore">Explore</a>
             <a href="#planner">Planner</a>
+
         </div>
+
     </nav>
 
 
-    <!-- Home Section -->
+    <!-- Hero Section -->
     <section id="home" class="hero">
 
         <div class="hero-content">
@@ -40,21 +46,53 @@
             </h1>
 
             <p>
-                Explore destinations and plan your perfect journey
-                with TravelSphere.
+                Explore amazing destinations and start planning
+                your perfect journey with TravelSphere.
             </p>
 
+
+            <!-- Search Box -->
             <div class="search-box">
+
                 <input
                     type="text"
+                    id="destinationInput"
                     placeholder="Search destination..."
                 >
 
-                <button>
+                <button id="exploreBtn">
                     Explore
                 </button>
+
             </div>
 
+
+            <!-- Hero Stats -->
+            <div class="hero-stats">
+
+                <div>
+                    <strong>195</strong>
+                    <small>Countries</small>
+                </div>
+
+                <div>
+                    <strong>1000+</strong>
+                    <small>Destinations</small>
+                </div>
+
+                <div>
+                    <strong>24/7</strong>
+                    <small>Travel Guide</small>
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- Earth -->
+        <div class="earth">
+            🌍
         </div>
 
     </section>
@@ -103,15 +141,23 @@
     <!-- Footer -->
     <footer>
 
-        <h2>✈ TravelSphere</h2>
+        <div>
+            <h2>✈ TravelSphere</h2>
 
-        <p>
-            Explore. Plan. Experience.
-        </p>
+            <p>
+                Explore. Plan. Experience.
+            </p>
+        </div>
 
-        <p>
-            Built with HTML • CSS • JavaScript
-        </p>
+        <div>
+            <p>
+                Built with HTML • CSS • JavaScript
+            </p>
+
+            <p>
+                © 2026 TravelSphere
+            </p>
+        </div>
 
     </footer>
 
@@ -119,4 +165,5 @@
     <script src="script.js"></script>
 
 </body>
+
 </html>
