@@ -21,3 +21,22 @@ Explore button styling
 Hero background
 Better responsive design
 Hover effects
+
+🚀 Commit 3 — Popular Destinations
+Now that Commit 1 (Foundation) and Commit 2 (Navigation + Hero) are done, Commit 3 will add the Popular Destinations section.
+
+Commit 3 changes
+
+We will add:
+
+🇦🇪 Dubai
+🇫🇷 Paris
+🇯🇵 Tokyo
+🇨🇭 Switzerland
+Destination cards
+Card descriptions
+Weather information
+Ratings
+Hover animation
+Responsive grid
+Click effect that sends the selected destination to the Planner
