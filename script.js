@@ -29,5 +29,25 @@ exploreBtn.addEventListener("click", () => {
         .scrollIntoView({
             behavior: "smooth"
         });
+        /* ==========================================
+   Destination Selection
+   Commit 3
+   ========================================== */
+
+function selectDestination(city) {
+
+    const planner =
+        document.getElementById("planner");
+
+    alert(
+        "You selected " + city +
+        ". Let's plan your trip!"
+    );
+
+    planner.scrollIntoView({
+        behavior: "smooth"
+    });
+
+}
 
 });

@@ -416,6 +416,193 @@ nav {
 .section-title p {
     color: #666;
 }
+/* ==========================================
+   Destination Cards
+   Commit 3
+   ========================================== */
+
+.destination-grid {
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(
+            auto-fit,
+            minmax(230px, 1fr)
+        );
+
+    gap: 25px;
+
+    max-width: 1200px;
+
+    margin: auto;
+}
+
+
+/* Card */
+
+.destination-card {
+
+    background: white;
+
+    border-radius: 25px;
+
+    overflow: hidden;
+
+    cursor: pointer;
+
+    box-shadow:
+        0 15px 40px #00000010;
+
+    transition:
+        transform 0.4s ease,
+        box-shadow 0.4s ease;
+
+}
+
+
+/* Card hover */
+
+.destination-card:hover {
+
+    transform:
+        translateY(-12px);
+
+    box-shadow:
+        0 25px 60px #00000020;
+
+}
+
+
+/* Destination Image */
+
+.destination-image {
+
+    height: 220px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    font-size: 90px;
+
+    transition:
+        transform 0.4s ease;
+
+    overflow: hidden;
+
+}
+
+
+/* Image hover */
+
+.destination-card:hover
+.destination-image {
+
+    transform:
+        scale(1.05);
+
+}
+
+
+/* Dubai */
+
+.dubai {
+
+    background:
+        linear-gradient(
+            135deg,
+            #ffd194,
+            #70e1f5
+        );
+
+}
+
+
+/* Paris */
+
+.paris {
+
+    background:
+        linear-gradient(
+            135deg,
+            #a1c4fd,
+            #c2e9fb
+        );
+
+}
+
+
+/* Tokyo */
+
+.tokyo {
+
+    background:
+        linear-gradient(
+            135deg,
+            #fbc2eb,
+            #a6c1ee
+        );
+
+}
+
+
+/* Switzerland */
+
+.swiss {
+
+    background:
+        linear-gradient(
+            135deg,
+            #d4fc79,
+            #96e6a1
+        );
+
+}
+
+
+/* Card Content */
+
+.card-content {
+
+    padding: 20px;
+
+}
+
+
+.card-content h3 {
+
+    font-size: 22px;
+
+}
+
+
+.card-content p {
+
+    margin:
+        7px 0 18px;
+
+    font-size: 13px;
+
+    color: #666;
+
+}
+
+
+/* Card Footer */
+
+.card-footer {
+
+    display: flex;
+
+    justify-content:
+        space-between;
+
+    font-size: 13px;
+
+}
 
 
 /* Planner */
