@@ -1,10 +1,12 @@
 /* ==========================================
    TravelSphere JavaScript
-   Commit 2
+   Commit 4
    ========================================== */
 
 
-/* Explore Button */
+/* =========================
+   Explore Button
+========================= */
 
 const exploreBtn =
     document.getElementById("exploreBtn");
@@ -13,14 +15,20 @@ const exploreBtn =
 exploreBtn.addEventListener("click", () => {
 
     const destination =
-        document.getElementById("destinationInput").value.trim();
+        document
+            .getElementById("destinationInput")
+            .value
+            .trim();
 
 
     if (!destination) {
 
-        alert("Please enter a destination.");
+        alert(
+            "Please enter a destination."
+        );
 
         return;
+
     }
 
 
@@ -29,25 +37,27 @@ exploreBtn.addEventListener("click", () => {
         .scrollIntoView({
             behavior: "smooth"
         });
-        /* ==========================================
+
+});
+
+
+/* =========================
    Destination Selection
-   Commit 3
-   ========================================== */
+========================= */
 
 function selectDestination(city) {
 
-    const planner =
-        document.getElementById("planner");
-
     alert(
-        "You selected " + city +
+        "You selected " +
+        city +
         ". Let's plan your trip!"
     );
 
-    planner.scrollIntoView({
-        behavior: "smooth"
-    });
+
+    document
+        .getElementById("planner")
+        .scrollIntoView({
+            behavior: "smooth"
+        });
 
 }
-
-});

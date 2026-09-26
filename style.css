@@ -1,7 +1,13 @@
 /* ==========================================
-   TravelSphere - Commit 2
-   Navigation + Hero Section
+   TravelSphere
+   Commit 4
+   Advanced Destination Card Design
    ========================================== */
+
+
+/* =========================
+   Reset
+========================= */
 
 * {
     margin: 0;
@@ -9,23 +15,29 @@
     box-sizing: border-box;
 }
 
+
 html {
     scroll-behavior: smooth;
 }
 
+
 body {
     font-family: Arial, sans-serif;
+
     background: #f7f9fc;
+
     color: #18202f;
 }
 
 
-/* ==========================================
+/* =========================
    Navigation
-   ========================================== */
+========================= */
 
 nav {
+
     position: fixed;
+
     top: 0;
     left: 0;
 
@@ -35,14 +47,19 @@ nav {
     padding: 0 8%;
 
     display: flex;
+
     align-items: center;
+
     justify-content: space-between;
 
-    background: rgba(255, 255, 255, 0.9);
+    background:
+        rgba(255, 255, 255, 0.9);
 
-    backdrop-filter: blur(12px);
+    backdrop-filter:
+        blur(15px);
 
-    box-shadow: 0 5px 20px #00000010;
+    box-shadow:
+        0 5px 25px #00000012;
 
     z-index: 1000;
 }
@@ -51,28 +68,39 @@ nav {
 /* Logo */
 
 .logo {
+
     display: flex;
+
     align-items: center;
 
     font-size: 23px;
+
     font-weight: 800;
 
     color: #18202f;
 }
 
+
 .logo span {
+
     margin-right: 8px;
+
 }
 
 
-/* Navigation Links */
+/* Navigation links */
 
 .nav-links {
+
     display: flex;
+
     gap: 30px;
+
 }
 
+
 .nav-links a {
+
     position: relative;
 
     text-decoration: none;
@@ -80,47 +108,59 @@ nav {
     color: #18202f;
 
     font-size: 15px;
+
     font-weight: 600;
 
     transition: 0.3s;
+
 }
 
-
-/* Link hover */
 
 .nav-links a:hover {
+
     color: #087cff;
+
 }
 
+
 .nav-links a::after {
+
     content: "";
 
     position: absolute;
 
     left: 0;
+
     bottom: -7px;
 
     width: 0;
+
     height: 2px;
 
     background: #087cff;
 
     transition: 0.3s;
+
 }
+
 
 .nav-links a:hover::after {
+
     width: 100%;
+
 }
 
 
-/* ==========================================
+/* =========================
    Hero
-   ========================================== */
+========================= */
 
 .hero {
+
     min-height: 100vh;
 
-    padding: 130px 8% 80px;
+    padding:
+        130px 8% 80px;
 
     display: flex;
 
@@ -131,11 +171,13 @@ nav {
     overflow: hidden;
 
     background:
+
         radial-gradient(
             circle at 80% 40%,
             #b7e8ff,
             transparent 30%
         ),
+
         linear-gradient(
             135deg,
             #ffffff,
@@ -144,27 +186,33 @@ nav {
 }
 
 
-/* Hero Content */
-
 .hero-content {
+
     max-width: 700px;
 
-    animation: heroAppear 1s ease;
+    animation:
+        heroAppear 1s ease;
 }
 
-
-/* Hero entrance animation */
 
 @keyframes heroAppear {
 
     from {
+
         opacity: 0;
-        transform: translateY(40px);
+
+        transform:
+            translateY(40px);
+
     }
 
     to {
+
         opacity: 1;
-        transform: translateY(0);
+
+        transform:
+            translateY(0);
+
     }
 
 }
@@ -173,13 +221,16 @@ nav {
 /* Badge */
 
 .badge {
+
     display: inline-block;
 
-    padding: 9px 16px;
+    padding:
+        9px 16px;
 
     border-radius: 50px;
 
-    background: #ffffffcc;
+    background:
+        #ffffffcc;
 
     color: #087cff;
 
@@ -193,19 +244,24 @@ nav {
 }
 
 
-/* Heading */
+/* Hero heading */
 
 .hero h1 {
-    font-size: clamp(45px, 7vw, 80px);
+
+    font-size:
+        clamp(45px, 7vw, 80px);
 
     line-height: 1.05;
 
     font-weight: 800;
 
     letter-spacing: -2px;
+
 }
 
+
 .hero h1 span {
+
     display: block;
 
     background:
@@ -218,13 +274,16 @@ nav {
     -webkit-background-clip: text;
 
     color: transparent;
+
 }
 
 
-/* Description */
+/* Hero paragraph */
 
 .hero p {
-    margin: 25px 0;
+
+    margin:
+        25px 0;
 
     max-width: 600px;
 
@@ -233,21 +292,23 @@ nav {
     line-height: 1.7;
 
     color: #5f6672;
+
 }
 
 
-/* ==========================================
-   Search Box
-   ========================================== */
+/* =========================
+   Search
+========================= */
 
 .search-box {
+
     display: flex;
 
     max-width: 600px;
 
-    background: white;
-
     padding: 8px;
+
+    background: white;
 
     border-radius: 18px;
 
@@ -255,19 +316,23 @@ nav {
         0 15px 50px #00000015;
 
     transition: 0.3s;
+
 }
 
+
 .search-box:focus-within {
-    transform: translateY(-3px);
+
+    transform:
+        translateY(-3px);
 
     box-shadow:
         0 20px 55px #00000020;
+
 }
 
 
-/* Search Input */
-
 .search-box input {
+
     flex: 1;
 
     border: none;
@@ -278,14 +343,17 @@ nav {
 
     font-size: 15px;
 
-    background: transparent;
 }
 
 
-/* Explore Button */
-
 .search-box button {
+
     border: none;
+
+    padding:
+        0 28px;
+
+    border-radius: 13px;
 
     background:
         linear-gradient(
@@ -296,108 +364,132 @@ nav {
 
     color: white;
 
-    padding: 0 28px;
-
-    border-radius: 13px;
+    font-weight: 700;
 
     cursor: pointer;
 
-    font-weight: 700;
-
     transition: 0.3s;
+
 }
 
+
 .search-box button:hover {
-    transform: scale(1.04);
+
+    transform:
+        scale(1.05);
 
     box-shadow:
         0 8px 25px #087cff40;
+
 }
 
 
-/* ==========================================
+/* =========================
    Hero Stats
-   ========================================== */
+========================= */
 
 .hero-stats {
+
     display: flex;
 
     gap: 50px;
 
     margin-top: 45px;
+
 }
 
+
 .hero-stats div {
+
     display: flex;
 
     flex-direction: column;
+
 }
+
 
 .hero-stats strong {
+
     font-size: 25px;
+
 }
 
+
 .hero-stats small {
+
     margin-top: 4px;
 
     color: #6c7480;
+
 }
 
 
-/* ==========================================
+/* =========================
    Earth
-   ========================================== */
+========================= */
 
 .earth {
+
     font-size: 300px;
 
-    animation:
-        floating 5s ease-in-out infinite;
+    user-select: none;
 
     filter:
         drop-shadow(
             0 30px 30px #00000022
         );
 
-    user-select: none;
+    animation:
+        floating 5s ease-in-out infinite;
+
 }
 
-
-/* Earth animation */
 
 @keyframes floating {
 
     0%,
     100% {
+
         transform:
             translateY(0)
             rotate(0deg);
+
     }
 
     50% {
+
         transform:
             translateY(-25px)
             rotate(5deg);
+
     }
 
 }
 
 
-/* ==========================================
+/* =========================
    Sections
-   ========================================== */
+========================= */
 
 .section {
-    padding: 110px 8%;
+
+    padding:
+        110px 8%;
+
 }
 
+
 .section-title {
+
     text-align: center;
 
     margin-bottom: 50px;
+
 }
 
+
 .section-title span {
+
     font-size: 12px;
 
     font-weight: 700;
@@ -405,21 +497,30 @@ nav {
     color: #087cff;
 
     letter-spacing: 2px;
+
 }
+
 
 .section-title h2 {
+
     font-size: 42px;
 
-    margin: 10px 0;
+    margin:
+        10px 0;
+
 }
 
+
 .section-title p {
+
     color: #666;
+
 }
-/* ==========================================
-   Destination Cards
-   Commit 3
-   ========================================== */
+
+
+/* =========================
+   Destination Grid
+========================= */
 
 .destination-grid {
 
@@ -436,12 +537,17 @@ nav {
     max-width: 1200px;
 
     margin: auto;
+
 }
 
 
-/* Card */
+/* =========================
+   Destination Card
+========================= */
 
 .destination-card {
+
+    position: relative;
 
     background: white;
 
@@ -451,32 +557,44 @@ nav {
 
     cursor: pointer;
 
+    border:
+        1px solid transparent;
+
     box-shadow:
         0 15px 40px #00000010;
 
     transition:
         transform 0.4s ease,
-        box-shadow 0.4s ease;
+        box-shadow 0.4s ease,
+        border-color 0.4s ease;
 
 }
 
 
-/* Card hover */
+/* Advanced hover */
 
 .destination-card:hover {
 
     transform:
-        translateY(-12px);
+        translateY(-14px)
+        scale(1.02);
 
     box-shadow:
-        0 25px 60px #00000020;
+        0 25px 60px #00000025;
+
+    border-color:
+        #087cff55;
 
 }
 
 
-/* Destination Image */
+/* =========================
+   Destination Image
+========================= */
 
 .destination-image {
+
+    position: relative;
 
     height: 220px;
 
@@ -486,28 +604,79 @@ nav {
 
     justify-content: center;
 
+    overflow: hidden;
+
     font-size: 90px;
 
     transition:
         transform 0.4s ease;
 
-    overflow: hidden;
+}
+
+
+/* Image overlay */
+
+.destination-image::after {
+
+    content: "";
+
+    position: absolute;
+
+    inset: 0;
+
+    background:
+        linear-gradient(
+            to top,
+            #00000040,
+            transparent 65%
+        );
+
+    opacity: 0;
+
+    transition: 0.4s;
 
 }
 
 
-/* Image hover */
+/* Overlay on hover */
 
 .destination-card:hover
-.destination-image {
+.destination-image::after {
 
-    transform:
-        scale(1.05);
+    opacity: 1;
 
 }
 
 
-/* Dubai */
+/* Destination emoji */
+
+.destination-image span {
+
+    position: relative;
+
+    z-index: 2;
+
+    transition:
+        transform 0.4s ease;
+
+}
+
+
+/* Emoji hover */
+
+.destination-card:hover
+.destination-image span {
+
+    transform:
+        scale(1.18)
+        rotate(5deg);
+
+}
+
+
+/* =========================
+   Destination Backgrounds
+========================= */
 
 .dubai {
 
@@ -521,8 +690,6 @@ nav {
 }
 
 
-/* Paris */
-
 .paris {
 
     background:
@@ -534,8 +701,6 @@ nav {
 
 }
 
-
-/* Tokyo */
 
 .tokyo {
 
@@ -549,8 +714,6 @@ nav {
 }
 
 
-/* Switzerland */
-
 .swiss {
 
     background:
@@ -563,11 +726,15 @@ nav {
 }
 
 
-/* Card Content */
+/* =========================
+   Card Content
+========================= */
 
 .card-content {
 
     padding: 20px;
+
+    background: white;
 
 }
 
@@ -575,6 +742,17 @@ nav {
 .card-content h3 {
 
     font-size: 22px;
+
+    transition:
+        color 0.3s ease;
+
+}
+
+
+.destination-card:hover
+.card-content h3 {
+
+    color: #087cff;
 
 }
 
@@ -588,102 +766,233 @@ nav {
 
     color: #666;
 
+    line-height: 1.5;
+
 }
 
 
-/* Card Footer */
+/* =========================
+   Card Footer
+========================= */
 
 .card-footer {
 
     display: flex;
 
-    justify-content:
-        space-between;
+    justify-content: space-between;
+
+    align-items: center;
 
     font-size: 13px;
 
 }
 
 
-/* Planner */
+/* =========================
+   Card Action
+========================= */
 
-.planner {
-    background: #eef6ff;
+.card-action {
+
+    margin-top: 15px;
+
+    padding-top: 12px;
+
+    border-top:
+        1px solid #eeeeee;
+
+    color: #087cff;
+
+    font-size: 13px;
+
+    font-weight: 700;
+
+    opacity: 0;
+
+    transform:
+        translateY(8px);
+
+    transition:
+        opacity 0.3s ease,
+        transform 0.3s ease;
+
 }
 
 
-/* ==========================================
+.destination-card:hover
+.card-action {
+
+    opacity: 1;
+
+    transform:
+        translateY(0);
+
+}
+
+
+/* =========================
+   Planner
+========================= */
+
+.planner {
+
+    background:
+        #eef6ff;
+
+}
+
+
+/* =========================
    Footer
-   ========================================== */
+========================= */
 
 footer {
-    padding: 50px 8%;
+
+    padding:
+        50px 8%;
 
     display: flex;
 
-    justify-content: space-between;
+    justify-content:
+        space-between;
 
-    background: #07111f;
+    background:
+        #07111f;
 
     color: white;
+
 }
 
+
 footer p {
+
     margin-top: 8px;
 
     opacity: 0.6;
+
 }
 
 
-/* ==========================================
-   Responsive Design
-   ========================================== */
+/* =========================
+   Responsive
+========================= */
 
 @media (max-width: 800px) {
 
     .nav-links {
+
         display: none;
+
     }
 
+
     .hero {
+
         text-align: center;
 
         flex-direction: column;
 
         padding-top: 120px;
+
     }
+
 
     .hero p {
+
         margin-left: auto;
+
         margin-right: auto;
+
     }
+
 
     .search-box {
+
         margin: auto;
+
     }
 
+
     .earth {
+
         font-size: 150px;
 
         margin-top: 50px;
+
     }
 
+
     .hero-stats {
+
         justify-content: center;
 
         gap: 25px;
+
     }
+
 
     .section-title h2 {
+
         font-size: 32px;
+
     }
 
+
     footer {
+
         flex-direction: column;
 
         gap: 25px;
 
         text-align: center;
+
+    }
+
+}
+
+
+/* =========================
+   Small Mobile
+========================= */
+
+@media (max-width: 600px) {
+
+    .destination-grid {
+
+        grid-template-columns: 1fr;
+
+    }
+
+
+    .destination-card:hover {
+
+        transform:
+            translateY(-7px);
+
+    }
+
+
+    .card-action {
+
+        opacity: 1;
+
+        transform:
+            translateY(0);
+
+    }
+
+
+    .hero h1 {
+
+        font-size: 42px;
+
+    }
+
+
+    .hero-stats {
+
+        gap: 20px;
+
     }
 
 }
