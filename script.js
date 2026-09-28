@@ -1,7 +1,7 @@
 /* ==========================================
    TravelSphere
-   Commit 5
-   Smart Travel Planner
+   Commit 6
+   Trip Itinerary Generator
    ========================================== */
 
 
@@ -10,41 +10,51 @@
 ========================= */
 
 const exploreBtn =
-    document.getElementById("exploreBtn");
+    document.getElementById(
+        "exploreBtn"
+    );
 
 
-exploreBtn.addEventListener("click", () => {
+exploreBtn.addEventListener(
+    "click",
+    function () {
 
-    const destination =
+        const destination =
+            document
+                .getElementById(
+                    "destinationInput"
+                )
+                .value
+                .trim();
+
+
+        if (!destination) {
+
+            alert(
+                "Please enter a destination."
+            );
+
+            return;
+        }
+
+
         document
-            .getElementById("destinationInput")
-            .value
-            .trim();
+            .getElementById(
+                "planDestination"
+            )
+            .value = destination;
 
 
-    if (!destination) {
-
-        alert(
-            "Please enter a destination."
-        );
-
-        return;
+        document
+            .getElementById(
+                "planner"
+            )
+            .scrollIntoView({
+                behavior: "smooth"
+            });
 
     }
-
-
-    document
-        .getElementById("planDestination")
-        .value = destination;
-
-
-    document
-        .getElementById("planner")
-        .scrollIntoView({
-            behavior: "smooth"
-        });
-
-});
+);
 
 
 /* =========================
@@ -54,12 +64,16 @@ exploreBtn.addEventListener("click", () => {
 function selectDestination(city) {
 
     document
-        .getElementById("planDestination")
+        .getElementById(
+            "planDestination"
+        )
         .value = city;
 
 
     document
-        .getElementById("planner")
+        .getElementById(
+            "planner"
+        )
         .scrollIntoView({
             behavior: "smooth"
         });
@@ -72,38 +86,50 @@ function selectDestination(city) {
 ========================= */
 
 const plannerForm =
-    document.getElementById("plannerForm");
+    document.getElementById(
+        "plannerForm"
+    );
 
 
 plannerForm.addEventListener(
     "submit",
-    function(event) {
+    function (event) {
 
         event.preventDefault();
 
 
         const destination =
             document
-                .getElementById("planDestination")
+                .getElementById(
+                    "planDestination"
+                )
                 .value
                 .trim();
 
 
         const days =
-            document
-                .getElementById("days")
-                .value;
+            Number(
+                document
+                    .getElementById(
+                        "days"
+                    )
+                    .value
+            );
 
 
         const budget =
             document
-                .getElementById("budget")
+                .getElementById(
+                    "budget"
+                )
                 .value;
 
 
         const travelStyle =
             document
-                .getElementById("travelStyle")
+                .getElementById(
+                    "travelStyle"
+                )
                 .value;
 
 
@@ -119,7 +145,6 @@ plannerForm.addEventListener(
             );
 
             return;
-
         }
 
 
@@ -132,6 +157,100 @@ plannerForm.addEventListener(
 
     }
 );
+
+
+/* =========================
+   Budget Calculator
+========================= */
+
+function getDailyBudget(budget) {
+
+    if (budget === "Budget") {
+
+        return 60;
+
+    }
+
+    if (budget === "Standard") {
+
+        return 120;
+
+    }
+
+    return 250;
+
+}
+
+
+/* =========================
+   Activity Generator
+========================= */
+
+function getActivities(style) {
+
+    const activities = {
+
+        Adventure: {
+
+            morning:
+                "Explore a famous local attraction",
+
+            afternoon:
+                "Try an exciting outdoor activity",
+
+            evening:
+                "Discover local food and nightlife"
+
+        },
+
+
+        Relaxation: {
+
+            morning:
+                "Enjoy a peaceful breakfast",
+
+            afternoon:
+                "Visit a relaxing scenic location",
+
+            evening:
+                "Enjoy a calm dinner and sunset"
+
+        },
+
+
+        Culture: {
+
+            morning:
+                "Visit a historical landmark",
+
+            afternoon:
+                "Explore a museum or cultural center",
+
+            evening:
+                "Experience local food and traditions"
+
+        },
+
+
+        Family: {
+
+            morning:
+                "Enjoy a family-friendly attraction",
+
+            afternoon:
+                "Visit a fun activity center",
+
+            evening:
+                "Enjoy a family dinner"
+
+        }
+
+    };
+
+
+    return activities[style];
+
+}
 
 
 /* =========================
@@ -151,62 +270,162 @@ function generateTrip(
         );
 
 
-    result.innerHTML = `
+    const dailyBudget =
+        getDailyBudget(budget);
 
-        <div class="generated-result">
 
-            <div class="result-icon">
-                ✈️
+    const totalBudget =
+        dailyBudget * days;
+
+
+    const activities =
+        getActivities(
+            travelStyle
+        );
+
+
+    let itinerary = "";
+
+
+    for (
+        let day = 1;
+        day <= days;
+        day++
+    ) {
+
+        itinerary += `
+
+            <div class="day-card">
+
+                <h4>
+                    Day ${day}
+                </h4>
+
+                <p>
+                    🌅
+                    <strong>
+                        Morning:
+                    </strong>
+
+                    ${activities.morning}
+                    in ${destination}.
+                </p>
+
+                <p>
+                    ☀️
+                    <strong>
+                        Afternoon:
+                    </strong>
+
+                    ${activities.afternoon}.
+                </p>
+
+                <p>
+                    🌙
+                    <strong>
+                        Evening:
+                    </strong>
+
+                    ${activities.evening}.
+                </p>
+
+                <div class="day-budget">
+
+                    💰 Estimated daily budget:
+                    $${dailyBudget}
+
+                </div>
+
             </div>
 
-            <h3>
-                Your Trip Plan
-            </h3>
+        `;
 
-            <p>
-                📍 Destination:
+    }
+
+
+    result.innerHTML = `
+
+        <div class="result-icon">
+            🗺️
+        </div>
+
+
+        <h3>
+            ${destination} Itinerary
+        </h3>
+
+
+        <p>
+            Your personalized
+            ${travelStyle.toLowerCase()}
+            travel plan is ready.
+        </p>
+
+
+        <div class="trip-summary">
+
+            <div class="summary-box">
+
+                📍
+
                 <strong>
                     ${destination}
                 </strong>
-            </p>
 
-            <p>
-                📅 Duration:
+            </div>
+
+
+            <div class="summary-box">
+
+                📅
+
                 <strong>
-                    ${days} days
+                    ${days} Days
                 </strong>
-            </p>
 
-            <p>
-                💰 Budget:
+            </div>
+
+
+            <div class="summary-box">
+
+                💰
+
                 <strong>
                     ${budget}
                 </strong>
-            </p>
 
-            <p>
-                🎯 Travel Style:
+            </div>
+
+
+            <div class="summary-box">
+
+                🎯
+
                 <strong>
                     ${travelStyle}
                 </strong>
-            </p>
-
-
-            <div class="plan-highlight">
-
-                <strong>
-                    🌎 TravelSphere Recommendation
-                </strong>
-
-                <p>
-                    Enjoy a ${days}-day
-                    ${travelStyle.toLowerCase()}
-                    journey in ${destination}
-                    with a ${budget.toLowerCase()}
-                    budget.
-                </p>
 
             </div>
+
+        </div>
+
+
+        <div class="plan-highlight">
+
+            <strong>
+                💵 Estimated Trip Budget:
+                $${totalBudget}
+            </strong>
+
+        </div>
+
+
+        <br>
+
+
+        <div class="itinerary">
+
+            ${itinerary}
 
         </div>
 
@@ -219,3 +438,49 @@ function generateTrip(
     });
 
 }
+
+
+/* =========================
+   Reset Planner
+========================= */
+
+const resetBtn =
+    document.getElementById(
+        "resetBtn"
+    );
+
+
+resetBtn.addEventListener(
+    "click",
+    function () {
+
+        document
+            .getElementById(
+                "plannerForm"
+            )
+            .reset();
+
+
+        document
+            .getElementById(
+                "plannerResult"
+            )
+            .innerHTML = `
+
+                <div class="result-icon">
+                    ✈️
+                </div>
+
+                <h3>
+                    Your Trip Plan
+                </h3>
+
+                <p>
+                    Fill in the planner to generate
+                    your day-by-day itinerary.
+                </p>
+
+            `;
+
+    }
+);
