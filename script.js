@@ -1,6 +1,7 @@
 /* ==========================================
-   TravelSphere JavaScript
-   Commit 4
+   TravelSphere
+   Commit 5
+   Smart Travel Planner
    ========================================== */
 
 
@@ -33,6 +34,11 @@ exploreBtn.addEventListener("click", () => {
 
 
     document
+        .getElementById("planDestination")
+        .value = destination;
+
+
+    document
         .getElementById("planner")
         .scrollIntoView({
             behavior: "smooth"
@@ -47,11 +53,9 @@ exploreBtn.addEventListener("click", () => {
 
 function selectDestination(city) {
 
-    alert(
-        "You selected " +
-        city +
-        ". Let's plan your trip!"
-    );
+    document
+        .getElementById("planDestination")
+        .value = city;
 
 
     document
@@ -59,5 +63,159 @@ function selectDestination(city) {
         .scrollIntoView({
             behavior: "smooth"
         });
+
+}
+
+
+/* =========================
+   Planner Form
+========================= */
+
+const plannerForm =
+    document.getElementById("plannerForm");
+
+
+plannerForm.addEventListener(
+    "submit",
+    function(event) {
+
+        event.preventDefault();
+
+
+        const destination =
+            document
+                .getElementById("planDestination")
+                .value
+                .trim();
+
+
+        const days =
+            document
+                .getElementById("days")
+                .value;
+
+
+        const budget =
+            document
+                .getElementById("budget")
+                .value;
+
+
+        const travelStyle =
+            document
+                .getElementById("travelStyle")
+                .value;
+
+
+        if (
+            !destination ||
+            !days ||
+            !budget ||
+            !travelStyle
+        ) {
+
+            alert(
+                "Please complete all planner fields."
+            );
+
+            return;
+
+        }
+
+
+        generateTrip(
+            destination,
+            days,
+            budget,
+            travelStyle
+        );
+
+    }
+);
+
+
+/* =========================
+   Generate Trip
+========================= */
+
+function generateTrip(
+    destination,
+    days,
+    budget,
+    travelStyle
+) {
+
+    const result =
+        document.getElementById(
+            "plannerResult"
+        );
+
+
+    result.innerHTML = `
+
+        <div class="generated-result">
+
+            <div class="result-icon">
+                ✈️
+            </div>
+
+            <h3>
+                Your Trip Plan
+            </h3>
+
+            <p>
+                📍 Destination:
+                <strong>
+                    ${destination}
+                </strong>
+            </p>
+
+            <p>
+                📅 Duration:
+                <strong>
+                    ${days} days
+                </strong>
+            </p>
+
+            <p>
+                💰 Budget:
+                <strong>
+                    ${budget}
+                </strong>
+            </p>
+
+            <p>
+                🎯 Travel Style:
+                <strong>
+                    ${travelStyle}
+                </strong>
+            </p>
+
+
+            <div class="plan-highlight">
+
+                <strong>
+                    🌎 TravelSphere Recommendation
+                </strong>
+
+                <p>
+                    Enjoy a ${days}-day
+                    ${travelStyle.toLowerCase()}
+                    journey in ${destination}
+                    with a ${budget.toLowerCase()}
+                    budget.
+                </p>
+
+            </div>
+
+        </div>
+
+    `;
+
+
+    result.scrollIntoView({
+        behavior: "smooth",
+        block: "center"
+    });
 
 }
