@@ -1,7 +1,7 @@
 /* ==========================================
    TravelSphere
-   Commit 6
-   Trip Itinerary Generator
+   Commit 7
+   Trip Actions + Smart Validation
    ========================================== */
 
 
@@ -10,51 +10,38 @@
 ========================= */
 
 const exploreBtn =
-    document.getElementById(
-        "exploreBtn"
-    );
+    document.getElementById("exploreBtn");
 
+if (exploreBtn) {
 
-exploreBtn.addEventListener(
-    "click",
-    function () {
+    exploreBtn.addEventListener("click", function () {
 
         const destination =
             document
-                .getElementById(
-                    "destinationInput"
-                )
+                .getElementById("destinationInput")
                 .value
                 .trim();
 
-
         if (!destination) {
 
-            alert(
-                "Please enter a destination."
-            );
+            alert("Please enter a destination.");
 
             return;
         }
 
-
         document
-            .getElementById(
-                "planDestination"
-            )
+            .getElementById("planDestination")
             .value = destination;
 
-
         document
-            .getElementById(
-                "planner"
-            )
+            .getElementById("planner")
             .scrollIntoView({
                 behavior: "smooth"
             });
 
-    }
-);
+    });
+
+}
 
 
 /* =========================
@@ -64,16 +51,11 @@ exploreBtn.addEventListener(
 function selectDestination(city) {
 
     document
-        .getElementById(
-            "planDestination"
-        )
+        .getElementById("planDestination")
         .value = city;
 
-
     document
-        .getElementById(
-            "planner"
-        )
+        .getElementById("planner")
         .scrollIntoView({
             behavior: "smooth"
         });
@@ -82,81 +64,111 @@ function selectDestination(city) {
 
 
 /* =========================
+   Smart Validation
+========================= */
+
+function validatePlannerInput(
+    destination,
+    days,
+    budget,
+    travelStyle
+) {
+
+    if (!destination) {
+
+        alert("Please enter a destination.");
+
+        return false;
+    }
+
+    if (!days || days < 1 || days > 30) {
+
+        alert(
+            "Please enter a travel duration between 1 and 30 days."
+        );
+
+        return false;
+    }
+
+    if (!budget) {
+
+        alert("Please select a travel budget.");
+
+        return false;
+    }
+
+    if (!travelStyle) {
+
+        alert("Please select a travel style.");
+
+        return false;
+    }
+
+    return true;
+}
+
+
+/* =========================
    Planner Form
 ========================= */
 
 const plannerForm =
-    document.getElementById(
-        "plannerForm"
+    document.getElementById("plannerForm");
+
+if (plannerForm) {
+
+    plannerForm.addEventListener(
+        "submit",
+        function (event) {
+
+            event.preventDefault();
+
+            const destination =
+                document
+                    .getElementById("planDestination")
+                    .value
+                    .trim();
+
+            const days =
+                Number(
+                    document
+                        .getElementById("days")
+                        .value
+                );
+
+            const budget =
+                document
+                    .getElementById("budget")
+                    .value;
+
+            const travelStyle =
+                document
+                    .getElementById("travelStyle")
+                    .value;
+
+            const valid =
+                validatePlannerInput(
+                    destination,
+                    days,
+                    budget,
+                    travelStyle
+                );
+
+            if (!valid) {
+                return;
+            }
+
+            generateTrip(
+                destination,
+                days,
+                budget,
+                travelStyle
+            );
+
+        }
     );
 
-
-plannerForm.addEventListener(
-    "submit",
-    function (event) {
-
-        event.preventDefault();
-
-
-        const destination =
-            document
-                .getElementById(
-                    "planDestination"
-                )
-                .value
-                .trim();
-
-
-        const days =
-            Number(
-                document
-                    .getElementById(
-                        "days"
-                    )
-                    .value
-            );
-
-
-        const budget =
-            document
-                .getElementById(
-                    "budget"
-                )
-                .value;
-
-
-        const travelStyle =
-            document
-                .getElementById(
-                    "travelStyle"
-                )
-                .value;
-
-
-        if (
-            !destination ||
-            !days ||
-            !budget ||
-            !travelStyle
-        ) {
-
-            alert(
-                "Please complete all planner fields."
-            );
-
-            return;
-        }
-
-
-        generateTrip(
-            destination,
-            days,
-            budget,
-            travelStyle
-        );
-
-    }
-);
+}
 
 
 /* =========================
@@ -203,7 +215,6 @@ function getActivities(style) {
 
         },
 
-
         Relaxation: {
 
             morning:
@@ -217,7 +228,6 @@ function getActivities(style) {
 
         },
 
-
         Culture: {
 
             morning:
@@ -230,7 +240,6 @@ function getActivities(style) {
                 "Experience local food and traditions"
 
         },
-
 
         Family: {
 
@@ -246,7 +255,6 @@ function getActivities(style) {
         }
 
     };
-
 
     return activities[style];
 
@@ -269,23 +277,16 @@ function generateTrip(
             "plannerResult"
         );
 
-
     const dailyBudget =
         getDailyBudget(budget);
-
 
     const totalBudget =
         dailyBudget * days;
 
-
     const activities =
-        getActivities(
-            travelStyle
-        );
-
+        getActivities(travelStyle);
 
     let itinerary = "";
-
 
     for (
         let day = 1;
@@ -345,97 +346,422 @@ function generateTrip(
 
     result.innerHTML = `
 
-        <div class="result-icon">
-            🗺️
-        </div>
+        <div class="generated-result">
+
+            <div class="result-icon">
+                🗺️
+            </div>
+
+            <h3>
+                ${destination} Itinerary
+            </h3>
+
+            <p>
+                Your personalized
+                ${travelStyle.toLowerCase()}
+                travel plan is ready.
+            </p>
 
 
-        <h3>
-            ${destination} Itinerary
-        </h3>
+            <div class="trip-summary">
+
+                <div class="summary-box">
+
+                    📍
+
+                    <strong>
+                        ${destination}
+                    </strong>
+
+                </div>
 
 
-        <p>
-            Your personalized
-            ${travelStyle.toLowerCase()}
-            travel plan is ready.
-        </p>
+                <div class="summary-box">
+
+                    📅
+
+                    <strong>
+                        ${days} Days
+                    </strong>
+
+                </div>
 
 
-        <div class="trip-summary">
+                <div class="summary-box">
 
-            <div class="summary-box">
+                    💰
 
-                📍
+                    <strong>
+                        ${budget}
+                    </strong>
+
+                </div>
+
+
+                <div class="summary-box">
+
+                    🎯
+
+                    <strong>
+                        ${travelStyle}
+                    </strong>
+
+                </div>
+
+            </div>
+
+
+            <div class="plan-highlight">
 
                 <strong>
-                    ${destination}
+                    💵 Estimated Trip Budget:
+                    $${totalBudget}
                 </strong>
 
             </div>
 
 
-            <div class="summary-box">
+            <div class="itinerary">
 
-                📅
-
-                <strong>
-                    ${days} Days
-                </strong>
+                ${itinerary}
 
             </div>
-
-
-            <div class="summary-box">
-
-                💰
-
-                <strong>
-                    ${budget}
-                </strong>
-
-            </div>
-
-
-            <div class="summary-box">
-
-                🎯
-
-                <strong>
-                    ${travelStyle}
-                </strong>
-
-            </div>
-
-        </div>
-
-
-        <div class="plan-highlight">
-
-            <strong>
-                💵 Estimated Trip Budget:
-                $${totalBudget}
-            </strong>
-
-        </div>
-
-
-        <br>
-
-
-        <div class="itinerary">
-
-            ${itinerary}
 
         </div>
 
     `;
 
 
+    addTripActions();
+
+
+    addGeneratedTime();
+
+
     result.scrollIntoView({
         behavior: "smooth",
         block: "center"
     });
+
+}
+
+
+/* =========================
+   Generated Time
+========================= */
+
+function addGeneratedTime() {
+
+    const result =
+        document.getElementById(
+            "plannerResult"
+        );
+
+    const time =
+        new Date().toLocaleString(
+            "en-IN",
+            {
+                dateStyle: "medium",
+                timeStyle: "short"
+            }
+        );
+
+    const timestamp =
+        document.createElement("p");
+
+    timestamp.className =
+        "trip-generated-time";
+
+    timestamp.textContent =
+        `Generated on ${time}`;
+
+    result.appendChild(timestamp);
+
+}
+
+
+/* =========================
+   Copy Trip Plan
+========================= */
+
+function copyTripPlan() {
+
+    const result =
+        document.getElementById(
+            "plannerResult"
+        );
+
+    const text =
+        result.innerText.trim();
+
+    if (!text) {
+
+        alert(
+            "Generate a trip plan first."
+        );
+
+        return;
+    }
+
+    navigator.clipboard
+        .writeText(text)
+        .then(function () {
+
+            alert(
+                "Trip plan copied successfully!"
+            );
+
+        })
+        .catch(function () {
+
+            alert(
+                "Unable to copy the trip plan."
+            );
+
+        });
+
+}
+
+
+/* =========================
+   Print Trip Plan
+========================= */
+
+function printTripPlan() {
+
+    const result =
+        document.getElementById(
+            "plannerResult"
+        );
+
+    if (!result.innerText.trim()) {
+
+        alert(
+            "Generate a trip plan first."
+        );
+
+        return;
+    }
+
+    const printWindow =
+        window.open(
+            "",
+            "_blank"
+        );
+
+    if (!printWindow) {
+
+        alert(
+            "Please allow pop-ups to print the trip plan."
+        );
+
+        return;
+    }
+
+
+    printWindow.document.write(`
+
+        <!DOCTYPE html>
+
+        <html>
+
+        <head>
+
+            <title>
+                TravelSphere Trip Plan
+            </title>
+
+            <style>
+
+                body {
+
+                    font-family:
+                        Arial,
+                        sans-serif;
+
+                    padding: 40px;
+
+                    color: #18202f;
+
+                    line-height: 1.6;
+
+                }
+
+                h1 {
+
+                    color: #087cff;
+
+                    margin-bottom: 25px;
+
+                }
+
+                h3 {
+
+                    margin-top: 25px;
+
+                }
+
+                .trip-summary {
+
+                    display: grid;
+
+                    grid-template-columns:
+                        repeat(4, 1fr);
+
+                    gap: 15px;
+
+                    margin: 20px 0;
+
+                }
+
+                .summary-box {
+
+                    padding: 15px;
+
+                    border:
+                        1px solid #ddd;
+
+                    border-radius: 10px;
+
+                }
+
+                .day-card {
+
+                    padding: 20px;
+
+                    margin: 15px 0;
+
+                    border:
+                        1px solid #ddd;
+
+                    border-radius: 12px;
+
+                    page-break-inside:
+                        avoid;
+
+                }
+
+                .day-budget {
+
+                    font-weight: bold;
+
+                    margin-top: 15px;
+
+                }
+
+                .plan-highlight {
+
+                    padding: 15px;
+
+                    background: #eef7ff;
+
+                    border-radius: 10px;
+
+                }
+
+                .trip-generated-time {
+
+                    color: #777;
+
+                    font-size: 12px;
+
+                }
+
+                #tripActions {
+
+                    display: none;
+
+                }
+
+            </style>
+
+        </head>
+
+
+        <body>
+
+            <h1>
+                🌍 TravelSphere
+            </h1>
+
+            ${result.innerHTML}
+
+        </body>
+
+        </html>
+
+    `);
+
+    printWindow.document.close();
+
+    printWindow.focus();
+
+    setTimeout(function () {
+
+        printWindow.print();
+
+    }, 500);
+
+}
+
+
+/* =========================
+   Trip Action Buttons
+========================= */
+
+function addTripActions() {
+
+    const result =
+        document.getElementById(
+            "plannerResult"
+        );
+
+    const oldActions =
+        document.getElementById(
+            "tripActions"
+        );
+
+    if (oldActions) {
+
+        oldActions.remove();
+
+    }
+
+
+    const actions =
+        document.createElement(
+            "div"
+        );
+
+    actions.id =
+        "tripActions";
+
+
+    actions.innerHTML = `
+
+        <button
+            type="button"
+            class="trip-action-btn"
+            onclick="copyTripPlan()">
+
+            📋 Copy Plan
+
+        </button>
+
+
+        <button
+            type="button"
+            class="trip-action-btn"
+            onclick="printTripPlan()">
+
+            🖨️ Print Plan
+
+        </button>
+
+    `;
+
+
+    result.appendChild(actions);
 
 }
 
@@ -449,38 +775,41 @@ const resetBtn =
         "resetBtn"
     );
 
+if (resetBtn) {
 
-resetBtn.addEventListener(
-    "click",
-    function () {
+    resetBtn.addEventListener(
+        "click",
+        function () {
 
-        document
-            .getElementById(
-                "plannerForm"
-            )
-            .reset();
+            document
+                .getElementById(
+                    "plannerForm"
+                )
+                .reset();
 
 
-        document
-            .getElementById(
-                "plannerResult"
-            )
-            .innerHTML = `
+            document
+                .getElementById(
+                    "plannerResult"
+                )
+                .innerHTML = `
 
-                <div class="result-icon">
-                    ✈️
-                </div>
+                    <div class="result-icon">
+                        ✈️
+                    </div>
 
-                <h3>
-                    Your Trip Plan
-                </h3>
+                    <h3>
+                        Your Trip Plan
+                    </h3>
 
-                <p>
-                    Fill in the planner to generate
-                    your day-by-day itinerary.
-                </p>
+                    <p>
+                        Fill in the planner to generate
+                        your day-by-day itinerary.
+                    </p>
 
-            `;
+                `;
 
-    }
-);
+        }
+    );
+
+}

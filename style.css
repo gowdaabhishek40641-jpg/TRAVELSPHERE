@@ -1,712 +1,35 @@
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
+/* ==========================================
+   TravelSphere
+   Commit 7
+   Trip Actions
+========================================== */
 
-html {
-    scroll-behavior: smooth;
-}
-
-body {
-    font-family: Arial, sans-serif;
-    background: #f7f9fc;
-    color: #18202f;
-}
-
-
-/* =========================
-   Navigation
-========================= */
-
-nav {
-    position: fixed;
-    top: 0;
-    left: 0;
+#tripActions {
 
     width: 100%;
-    height: 75px;
-
-    padding: 0 8%;
 
     display: flex;
-    align-items: center;
-    justify-content: space-between;
-
-    background: rgba(255,255,255,0.9);
-
-    backdrop-filter: blur(15px);
-
-    box-shadow:
-        0 5px 25px #00000012;
-
-    z-index: 1000;
-}
-
-.logo {
-    display: flex;
-    align-items: center;
-
-    font-size: 23px;
-    font-weight: 800;
-}
-
-.logo span {
-    margin-right: 8px;
-}
-
-.nav-links {
-    display: flex;
-    gap: 30px;
-}
-
-.nav-links a {
-    position: relative;
-
-    text-decoration: none;
-
-    color: #18202f;
-
-    font-size: 15px;
-    font-weight: 600;
-
-    transition: 0.3s;
-}
-
-.nav-links a:hover {
-    color: #087cff;
-}
-
-.nav-links a::after {
-    content: "";
-
-    position: absolute;
-
-    left: 0;
-    bottom: -7px;
-
-    width: 0;
-    height: 2px;
-
-    background: #087cff;
-
-    transition: 0.3s;
-}
-
-.nav-links a:hover::after {
-    width: 100%;
-}
-
-
-/* =========================
-   Hero
-========================= */
-
-.hero {
-    min-height: 100vh;
-
-    padding: 130px 8% 80px;
-
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-
-    overflow: hidden;
-
-    background:
-        radial-gradient(
-            circle at 80% 40%,
-            #b7e8ff,
-            transparent 30%
-        ),
-        linear-gradient(
-            135deg,
-            #ffffff,
-            #eef7ff
-        );
-}
-
-.hero-content {
-    max-width: 700px;
-
-    animation:
-        heroAppear 1s ease;
-}
-
-@keyframes heroAppear {
-
-    from {
-        opacity: 0;
-        transform: translateY(40px);
-    }
-
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-
-}
-
-.badge {
-    display: inline-block;
-
-    padding: 9px 16px;
-
-    border-radius: 50px;
-
-    background: #ffffffcc;
-
-    color: #087cff;
-
-    font-size: 12px;
-
-    font-weight: 700;
-
-    letter-spacing: 1px;
-
-    margin-bottom: 22px;
-}
-
-.hero h1 {
-    font-size:
-        clamp(45px, 7vw, 80px);
-
-    line-height: 1.05;
-
-    font-weight: 800;
-
-    letter-spacing: -2px;
-}
-
-.hero h1 span {
-    display: block;
-
-    background:
-        linear-gradient(
-            90deg,
-            #087cff,
-            #00b894
-        );
-
-    -webkit-background-clip: text;
-
-    color: transparent;
-}
-
-.hero p {
-    margin: 25px 0;
-
-    max-width: 600px;
-
-    font-size: 17px;
-
-    line-height: 1.7;
-
-    color: #5f6672;
-}
-
-
-/* =========================
-   Search
-========================= */
-
-.search-box {
-    display: flex;
-
-    max-width: 600px;
-
-    padding: 8px;
-
-    background: white;
-
-    border-radius: 18px;
-
-    box-shadow:
-        0 15px 50px #00000015;
-}
-
-.search-box input {
-    flex: 1;
-
-    border: none;
-
-    outline: none;
-
-    padding: 15px;
-
-    font-size: 15px;
-}
-
-.search-box button {
-    border: none;
-
-    padding: 0 28px;
-
-    border-radius: 13px;
-
-    background:
-        linear-gradient(
-            90deg,
-            #087cff,
-            #00a884
-        );
-
-    color: white;
-
-    font-weight: 700;
-
-    cursor: pointer;
-
-    transition: 0.3s;
-}
-
-.search-box button:hover {
-    transform: scale(1.05);
-}
-
-
-/* =========================
-   Hero Stats
-========================= */
-
-.hero-stats {
-    display: flex;
-
-    gap: 50px;
-
-    margin-top: 45px;
-}
-
-.hero-stats div {
-    display: flex;
-
-    flex-direction: column;
-}
-
-.hero-stats strong {
-    font-size: 25px;
-}
-
-.hero-stats small {
-    margin-top: 4px;
-
-    color: #6c7480;
-}
-
-
-/* =========================
-   Earth
-========================= */
-
-.earth {
-    font-size: 300px;
-
-    user-select: none;
-
-    filter:
-        drop-shadow(
-            0 30px 30px #00000022
-        );
-
-    animation:
-        floating 5s ease-in-out infinite;
-}
-
-@keyframes floating {
-
-    0%,
-    100% {
-        transform:
-            translateY(0)
-            rotate(0deg);
-    }
-
-    50% {
-        transform:
-            translateY(-25px)
-            rotate(5deg);
-    }
-
-}
-
-
-/* =========================
-   Sections
-========================= */
-
-.section {
-    padding: 110px 8%;
-}
-
-.section-title {
-    text-align: center;
-
-    margin-bottom: 50px;
-}
-
-.section-title span {
-    font-size: 12px;
-
-    font-weight: 700;
-
-    color: #087cff;
-
-    letter-spacing: 2px;
-}
-
-.section-title h2 {
-    font-size: 42px;
-
-    margin: 10px 0;
-}
-
-.section-title p {
-    color: #666;
-}
-
-
-/* =========================
-   Destination Grid
-========================= */
-
-.destination-grid {
-    display: grid;
-
-    grid-template-columns:
-        repeat(
-            auto-fit,
-            minmax(230px, 1fr)
-        );
-
-    gap: 25px;
-
-    max-width: 1200px;
-
-    margin: auto;
-}
-
-
-/* =========================
-   Destination Card
-========================= */
-
-.destination-card {
-    position: relative;
-
-    background: white;
-
-    border-radius: 25px;
-
-    overflow: hidden;
-
-    cursor: pointer;
-
-    border:
-        1px solid transparent;
-
-    box-shadow:
-        0 15px 40px #00000010;
-
-    transition:
-        transform 0.4s ease,
-        box-shadow 0.4s ease,
-        border-color 0.4s ease;
-}
-
-.destination-card:hover {
-    transform:
-        translateY(-14px)
-        scale(1.02);
-
-    box-shadow:
-        0 25px 60px #00000025;
-
-    border-color:
-        #087cff55;
-}
-
-
-/* =========================
-   Destination Image
-========================= */
-
-.destination-image {
-    position: relative;
-
-    height: 220px;
-
-    display: flex;
-
-    align-items: center;
 
     justify-content: center;
 
-    overflow: hidden;
+    align-items: center;
 
-    font-size: 90px;
-}
+    gap: 12px;
 
-.destination-image::after {
-    content: "";
+    margin-top: 25px;
 
-    position: absolute;
+    flex-wrap: wrap;
 
-    inset: 0;
-
-    background:
-        linear-gradient(
-            to top,
-            #00000040,
-            transparent 65%
-        );
-
-    opacity: 0;
-
-    transition: 0.4s;
-}
-
-.destination-card:hover
-.destination-image::after {
-    opacity: 1;
-}
-
-.destination-image span {
-    position: relative;
-
-    z-index: 2;
-
-    transition:
-        transform 0.4s ease;
-}
-
-.destination-card:hover
-.destination-image span {
-    transform:
-        scale(1.18)
-        rotate(5deg);
 }
 
 
-/* =========================
-   Destination Colors
-========================= */
-
-.dubai {
-    background:
-        linear-gradient(
-            135deg,
-            #ffd194,
-            #70e1f5
-        );
-}
-
-.paris {
-    background:
-        linear-gradient(
-            135deg,
-            #a1c4fd,
-            #c2e9fb
-        );
-}
-
-.tokyo {
-    background:
-        linear-gradient(
-            135deg,
-            #fbc2eb,
-            #a6c1ee
-        );
-}
-
-.swiss {
-    background:
-        linear-gradient(
-            135deg,
-            #d4fc79,
-            #96e6a1
-        );
-}
-
-
-/* =========================
-   Card Content
-========================= */
-
-.card-content {
-    padding: 20px;
-
-    background: white;
-}
-
-.card-content h3 {
-    font-size: 22px;
-
-    transition:
-        color 0.3s ease;
-}
-
-.destination-card:hover
-.card-content h3 {
-    color: #087cff;
-}
-
-.card-content p {
-    margin:
-        7px 0 18px;
-
-    font-size: 13px;
-
-    color: #666;
-}
-
-.card-footer {
-    display: flex;
-
-    justify-content:
-        space-between;
-
-    font-size: 13px;
-}
-
-.card-action {
-    margin-top: 15px;
-
-    padding-top: 12px;
-
-    border-top:
-        1px solid #eeeeee;
-
-    color: #087cff;
-
-    font-size: 13px;
-
-    font-weight: 700;
-
-    opacity: 0;
-
-    transform:
-        translateY(8px);
-
-    transition:
-        opacity 0.3s ease,
-        transform 0.3s ease;
-}
-
-.destination-card:hover
-.card-action {
-    opacity: 1;
-
-    transform:
-        translateY(0);
-}
-
-
-/* =========================
-   Planner
-========================= */
-
-.planner {
-    background:
-        linear-gradient(
-            135deg,
-            #eef7ff,
-            #f7fbff
-        );
-}
-
-
-/* Planner Container */
-
-.planner-container {
-    max-width: 1050px;
-
-    margin: auto;
-
-    display: grid;
-
-    grid-template-columns:
-        1fr 1fr;
-
-    gap: 30px;
-}
-
-
-/* Planner Form */
-
-.planner-form {
-    background: white;
-
-    padding: 35px;
-
-    border-radius: 25px;
-
-    box-shadow:
-        0 20px 50px #00000012;
-}
-
-
-/* Form group */
-
-.form-group {
-    margin-bottom: 22px;
-}
-
-
-/* Labels */
-
-.form-group label {
-    display: block;
-
-    margin-bottom: 8px;
-
-    font-size: 14px;
-
-    font-weight: 700;
-}
-
-
-/* Inputs and Select */
-
-.form-group input,
-.form-group select {
-    width: 100%;
-
-    padding: 14px 15px;
-
-    border: 1px solid #dfe5ec;
-
-    border-radius: 12px;
-
-    outline: none;
-
-    font-size: 14px;
-
-    background: #f9fbfd;
-
-    transition: 0.3s;
-}
-
-.form-group input:focus,
-.form-group select:focus {
-    border-color: #087cff;
-
-    background: white;
-
-    box-shadow:
-        0 0 0 4px #087cff12;
-}
-
-
-/* Generate Button */
-
-.generate-btn {
-    width: 100%;
-
-    padding: 15px;
+.trip-action-btn {
 
     border: none;
 
-    border-radius: 12px;
+    padding: 12px 22px;
+
+    border-radius: 10px;
 
     background:
         linear-gradient(
@@ -717,227 +40,143 @@ nav {
 
     color: white;
 
-    font-size: 15px;
+    font-size: 13px;
 
     font-weight: 700;
 
     cursor: pointer;
 
-    transition: 0.3s;
+    transition:
+        transform 0.3s ease,
+        box-shadow 0.3s ease;
+
 }
 
-.generate-btn:hover {
+
+.trip-action-btn:hover {
+
     transform:
         translateY(-3px);
 
     box-shadow:
-        0 12px 30px #087cff35;
+        0 10px 25px #087cff35;
+
 }
 
 
-/* Planner Result */
+.trip-generated-time {
 
-.planner-result {
-    min-height: 100%;
+    width: 100%;
 
-    padding: 40px;
+    margin-top: 18px;
 
-    border-radius: 25px;
+    font-size: 12px;
 
-    background:
-        linear-gradient(
-            135deg,
-            #ffffff,
-            #f0f8ff
-        );
-
-    box-shadow:
-        0 20px 50px #00000012;
-
-    display: flex;
-
-    flex-direction: column;
-
-    justify-content: center;
-
-    align-items: center;
+    color: #7b8490;
 
     text-align: center;
 
+}
+
+
+/* =========================
+   Day Card Enhancement
+========================= */
+
+.day-card {
+
+    margin-top: 18px;
+
+    padding: 20px;
+
+    border-radius: 15px;
+
+    background: white;
+
+    border: 1px solid #e5eaf0;
+
+    box-shadow:
+        0 8px 25px #00000008;
+
     transition:
-        transform 0.3s ease;
+        transform 0.3s ease,
+        box-shadow 0.3s ease;
+
 }
 
-.planner-result:hover {
+
+.day-card:hover {
+
     transform:
-        translateY(-5px);
+        translateY(-4px);
+
+    box-shadow:
+        0 15px 35px #00000012;
+
 }
 
-.result-icon {
-    font-size: 60px;
 
-    margin-bottom: 20px;
+.day-card h4 {
+
+    margin-bottom: 15px;
+
+    color: #087cff;
+
+    font-size: 19px;
+
 }
 
-.planner-result h3 {
-    font-size: 28px;
 
-    margin-bottom: 12px;
-}
+.day-card p {
 
-.planner-result p {
-    color: #666;
+    margin: 10px 0;
 
     line-height: 1.6;
+
 }
 
 
-/* Generated result */
+.day-budget {
 
-.generated-result {
-    width: 100%;
+    margin-top: 15px;
 
-    text-align: left;
-}
+    padding: 10px;
 
-.generated-result h3 {
-    color: #087cff;
-}
-
-.generated-result p {
-    margin: 8px 0;
-
-    color: #555;
-}
-
-.plan-highlight {
-    margin-top: 20px;
-
-    padding: 15px;
-
-    border-radius: 12px;
+    border-radius: 8px;
 
     background: #eef7ff;
+
+    color: #087cff;
+
+    font-weight: 700;
+
 }
 
 
 /* =========================
-   Footer
+   Mobile
 ========================= */
-
-footer {
-    padding: 50px 8%;
-
-    display: flex;
-
-    justify-content:
-        space-between;
-
-    background:
-        #07111f;
-
-    color: white;
-}
-
-footer p {
-    margin-top: 8px;
-
-    opacity: 0.6;
-}
-
-
-/* =========================
-   Responsive
-========================= */
-
-@media (max-width: 900px) {
-
-    .planner-container {
-        grid-template-columns: 1fr;
-    }
-
-}
-
-
-@media (max-width: 800px) {
-
-    .nav-links {
-        display: none;
-    }
-
-    .hero {
-        text-align: center;
-
-        flex-direction: column;
-
-        padding-top: 120px;
-    }
-
-    .hero p {
-        margin-left: auto;
-        margin-right: auto;
-    }
-
-    .search-box {
-        margin: auto;
-    }
-
-    .earth {
-        font-size: 150px;
-
-        margin-top: 50px;
-    }
-
-    .hero-stats {
-        justify-content: center;
-
-        gap: 25px;
-    }
-
-    .section-title h2 {
-        font-size: 32px;
-    }
-
-    footer {
-        flex-direction: column;
-
-        gap: 25px;
-
-        text-align: center;
-    }
-
-}
-
 
 @media (max-width: 600px) {
 
-    .destination-grid {
-        grid-template-columns: 1fr;
+    #tripActions {
+
+        flex-direction: column;
+
     }
 
-    .destination-card:hover {
-        transform:
-            translateY(-7px);
+
+    .trip-action-btn {
+
+        width: 100%;
+
     }
 
-    .card-action {
-        opacity: 1;
 
-        transform:
-            translateY(0);
-    }
+    .day-card {
 
-    .hero h1 {
-        font-size: 42px;
-    }
+        padding: 16px;
 
-    .hero-stats {
-        gap: 20px;
-    }
-
-    .planner-form,
-    .planner-result {
-        padding: 25px;
     }
 
 }
