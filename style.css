@@ -178,5 +178,121 @@
         padding: 16px;
 
     }
+     /* ==========================================
+    COMMIT 8
+    BUDGET ANALYTICS
+ ========================================== */
 
+.budget-analytics {
+
+    width: 100%;
+
+    margin-top: 25px;
+
+    padding: 22px;
+
+    border-radius: 18px;
+
+    background: #ffffff;
+
+    border: 1px solid #e4eaf1;
+
+    box-shadow:
+        0 10px 30px #00000008;
+
+}
+
+
+.budget-analytics h4 {
+
+    margin-bottom: 15px;
+
+    color: #087cff;
+
+    font-size: 19px;
+
+}
+
+
+.budget-row {
+
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    padding: 13px 0;
+
+    border-bottom:
+        1px solid #edf0f4;
+
+    font-size: 14px;
+
+}
+
+
+.budget-row strong {
+
+    color: #18202f;
+
+}
+
+
+.budget-total {
+
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    margin-top: 15px;
+
+    padding: 16px;
+
+    border-radius: 12px;
+
+    background:
+        linear-gradient(
+            90deg,
+            #eef7ff,
+            #f0fffa
+        );
+
+    color: #087cff;
+
+    font-size: 17px;
+
+}
+
+
+.budget-total strong {
+
+    font-size: 21px;
+
+}
+
+
+@media (max-width: 600px) {
+
+    .budget-analytics {
+
+        padding: 18px;
+
+    }
+
+    .budget-row {
+
+        font-size: 13px;
+
+    }
+
+    .budget-total {
+
+        font-size: 15px;
+
+    }
+
+}
 }

@@ -1,14 +1,3 @@
-/* ==========================================
-   TravelSphere
-   Commit 7
-   Trip Actions + Smart Validation
-   ========================================== */
-
-
-/* =========================
-   Explore Button
-========================= */
-
 const exploreBtn =
     document.getElementById("exploreBtn");
 
@@ -17,24 +6,18 @@ if (exploreBtn) {
     exploreBtn.addEventListener("click", function () {
 
         const destination =
-            document
-                .getElementById("destinationInput")
-                .value
-                .trim();
+            document.getElementById("destinationInput")
+                .value.trim();
 
         if (!destination) {
-
             alert("Please enter a destination.");
-
             return;
         }
 
-        document
-            .getElementById("planDestination")
+        document.getElementById("planDestination")
             .value = destination;
 
-        document
-            .getElementById("planner")
+        document.getElementById("planner")
             .scrollIntoView({
                 behavior: "smooth"
             });
@@ -50,12 +33,10 @@ if (exploreBtn) {
 
 function selectDestination(city) {
 
-    document
-        .getElementById("planDestination")
+    document.getElementById("planDestination")
         .value = city;
 
-    document
-        .getElementById("planner")
+    document.getElementById("planner")
         .scrollIntoView({
             behavior: "smooth"
         });
@@ -64,7 +45,7 @@ function selectDestination(city) {
 
 
 /* =========================
-   Smart Validation
+   Validation
 ========================= */
 
 function validatePlannerInput(
@@ -75,32 +56,24 @@ function validatePlannerInput(
 ) {
 
     if (!destination) {
-
         alert("Please enter a destination.");
-
         return false;
     }
 
     if (!days || days < 1 || days > 30) {
-
         alert(
             "Please enter a travel duration between 1 and 30 days."
         );
-
         return false;
     }
 
     if (!budget) {
-
         alert("Please select a travel budget.");
-
         return false;
     }
 
     if (!travelStyle) {
-
         alert("Please select a travel style.");
-
         return false;
     }
 
@@ -124,37 +97,28 @@ if (plannerForm) {
             event.preventDefault();
 
             const destination =
-                document
-                    .getElementById("planDestination")
-                    .value
-                    .trim();
+                document.getElementById("planDestination")
+                    .value.trim();
 
             const days =
                 Number(
-                    document
-                        .getElementById("days")
-                        .value
+                    document.getElementById("days").value
                 );
 
             const budget =
-                document
-                    .getElementById("budget")
-                    .value;
+                document.getElementById("budget").value;
 
             const travelStyle =
-                document
-                    .getElementById("travelStyle")
-                    .value;
+                document.getElementById("travelStyle").value;
 
-            const valid =
-                validatePlannerInput(
+            if (
+                !validatePlannerInput(
                     destination,
                     days,
                     budget,
                     travelStyle
-                );
-
-            if (!valid) {
+                )
+            ) {
                 return;
             }
 
@@ -172,25 +136,38 @@ if (plannerForm) {
 
 
 /* =========================
-   Budget Calculator
+   Budget Profile
 ========================= */
 
-function getDailyBudget(budget) {
+function getBudgetProfile(budget) {
 
-    if (budget === "Budget") {
+    const profiles = {
 
-        return 60;
+        Budget: {
+            accommodation: 30,
+            food: 15,
+            transport: 10,
+            activities: 5
+        },
 
-    }
+        Standard: {
+            accommodation: 60,
+            food: 30,
+            transport: 20,
+            activities: 10
+        },
 
-    if (budget === "Standard") {
+        Luxury: {
+            accommodation: 140,
+            food: 60,
+            transport: 35,
+            activities: 15
+        }
 
-        return 120;
+    };
 
-    }
-
-    return 250;
-
+    return profiles[budget] ||
+        profiles.Standard;
 }
 
 
@@ -256,8 +233,8 @@ function getActivities(style) {
 
     };
 
-    return activities[style];
-
+    return activities[style] ||
+        activities.Culture;
 }
 
 
@@ -277,11 +254,29 @@ function generateTrip(
             "plannerResult"
         );
 
-    const dailyBudget =
-        getDailyBudget(budget);
+    const profile =
+        getBudgetProfile(budget);
+
+    const accommodation =
+        profile.accommodation * days;
+
+    const food =
+        profile.food * days;
+
+    const transport =
+        profile.transport * days;
+
+    const activitiesCost =
+        profile.activities * days;
 
     const totalBudget =
-        dailyBudget * days;
+        accommodation +
+        food +
+        transport +
+        activitiesCost;
+
+    const dailyBudget =
+        totalBudget / days;
 
     const activities =
         getActivities(travelStyle);
@@ -304,36 +299,27 @@ function generateTrip(
 
                 <p>
                     🌅
-                    <strong>
-                        Morning:
-                    </strong>
-
+                    <strong>Morning:</strong>
                     ${activities.morning}
                     in ${destination}.
                 </p>
 
                 <p>
                     ☀️
-                    <strong>
-                        Afternoon:
-                    </strong>
-
+                    <strong>Afternoon:</strong>
                     ${activities.afternoon}.
                 </p>
 
                 <p>
                     🌙
-                    <strong>
-                        Evening:
-                    </strong>
-
+                    <strong>Evening:</strong>
                     ${activities.evening}.
                 </p>
 
                 <div class="day-budget">
 
-                    💰 Estimated daily budget:
-                    $${dailyBudget}
+                    💰 Daily estimated cost:
+                    $${dailyBudget.toFixed(0)}
 
                 </div>
 
@@ -411,11 +397,88 @@ function generateTrip(
             </div>
 
 
+            <div class="budget-analytics">
+
+                <h4>
+                    💰 Budget Analytics
+                </h4>
+
+
+                <div class="budget-row">
+
+                    <span>
+                        🏨 Accommodation
+                    </span>
+
+                    <strong>
+                        $${accommodation}
+                    </strong>
+
+                </div>
+
+
+                <div class="budget-row">
+
+                    <span>
+                        🍽️ Food
+                    </span>
+
+                    <strong>
+                        $${food}
+                    </strong>
+
+                </div>
+
+
+                <div class="budget-row">
+
+                    <span>
+                        🚕 Transport
+                    </span>
+
+                    <strong>
+                        $${transport}
+                    </strong>
+
+                </div>
+
+
+                <div class="budget-row">
+
+                    <span>
+                        🎟️ Activities
+                    </span>
+
+                    <strong>
+                        $${activitiesCost}
+                    </strong>
+
+                </div>
+
+
+                <div class="budget-total">
+
+                    <span>
+                        Estimated Total
+                    </span>
+
+                    <strong>
+                        $${totalBudget}
+                    </strong>
+
+                </div>
+
+            </div>
+
+
             <div class="plan-highlight">
 
+                💵
+
+                Estimated daily average:
+
                 <strong>
-                    💵 Estimated Trip Budget:
-                    $${totalBudget}
+                    $${dailyBudget.toFixed(0)}
                 </strong>
 
             </div>
@@ -432,10 +495,9 @@ function generateTrip(
     `;
 
 
-    addTripActions();
-
-
     addGeneratedTime();
+
+    addTripActions();
 
 
     result.scrollIntoView({
@@ -457,14 +519,14 @@ function addGeneratedTime() {
             "plannerResult"
         );
 
-    const time =
-        new Date().toLocaleString(
-            "en-IN",
-            {
-                dateStyle: "medium",
-                timeStyle: "short"
-            }
+    const oldTime =
+        result.querySelector(
+            ".trip-generated-time"
         );
+
+    if (oldTime) {
+        oldTime.remove();
+    }
 
     const timestamp =
         document.createElement("p");
@@ -473,7 +535,15 @@ function addGeneratedTime() {
         "trip-generated-time";
 
     timestamp.textContent =
-        `Generated on ${time}`;
+        `Generated on ${
+            new Date().toLocaleString(
+                "en-IN",
+                {
+                    dateStyle: "medium",
+                    timeStyle: "short"
+                }
+            )
+        }`;
 
     result.appendChild(timestamp);
 
@@ -481,7 +551,7 @@ function addGeneratedTime() {
 
 
 /* =========================
-   Copy Trip Plan
+   Copy Plan
 ========================= */
 
 function copyTripPlan() {
@@ -524,7 +594,7 @@ function copyTripPlan() {
 
 
 /* =========================
-   Print Trip Plan
+   Print Plan
 ========================= */
 
 function printTripPlan() {
@@ -544,10 +614,7 @@ function printTripPlan() {
     }
 
     const printWindow =
-        window.open(
-            "",
-            "_blank"
-        );
+        window.open("", "_blank");
 
     if (!printWindow) {
 
@@ -557,7 +624,6 @@ function printTripPlan() {
 
         return;
     }
-
 
     printWindow.document.write(`
 
@@ -574,109 +640,44 @@ function printTripPlan() {
             <style>
 
                 body {
-
-                    font-family:
-                        Arial,
-                        sans-serif;
-
+                    font-family: Arial, sans-serif;
                     padding: 40px;
-
                     color: #18202f;
-
                     line-height: 1.6;
-
                 }
 
                 h1 {
-
                     color: #087cff;
-
-                    margin-bottom: 25px;
-
                 }
 
-                h3 {
-
-                    margin-top: 25px;
-
+                .budget-row,
+                .budget-total {
+                    display: flex;
+                    justify-content: space-between;
+                    padding: 10px;
+                    border-bottom: 1px solid #ddd;
                 }
 
-                .trip-summary {
-
-                    display: grid;
-
-                    grid-template-columns:
-                        repeat(4, 1fr);
-
-                    gap: 15px;
-
-                    margin: 20px 0;
-
-                }
-
-                .summary-box {
-
-                    padding: 15px;
-
-                    border:
-                        1px solid #ddd;
-
-                    border-radius: 10px;
-
+                .budget-total {
+                    font-size: 18px;
+                    font-weight: bold;
                 }
 
                 .day-card {
-
                     padding: 20px;
-
                     margin: 15px 0;
-
-                    border:
-                        1px solid #ddd;
-
+                    border: 1px solid #ddd;
                     border-radius: 12px;
-
-                    page-break-inside:
-                        avoid;
-
-                }
-
-                .day-budget {
-
-                    font-weight: bold;
-
-                    margin-top: 15px;
-
-                }
-
-                .plan-highlight {
-
-                    padding: 15px;
-
-                    background: #eef7ff;
-
-                    border-radius: 10px;
-
-                }
-
-                .trip-generated-time {
-
-                    color: #777;
-
-                    font-size: 12px;
-
+                    page-break-inside: avoid;
                 }
 
                 #tripActions {
-
                     display: none;
-
                 }
 
             </style>
 
         </head>
-
 
         <body>
 
@@ -706,7 +707,7 @@ function printTripPlan() {
 
 
 /* =========================
-   Trip Action Buttons
+   Trip Actions
 ========================= */
 
 function addTripActions() {
@@ -722,11 +723,8 @@ function addTripActions() {
         );
 
     if (oldActions) {
-
         oldActions.remove();
-
     }
-
 
     const actions =
         document.createElement(
@@ -735,7 +733,6 @@ function addTripActions() {
 
     actions.id =
         "tripActions";
-
 
     actions.innerHTML = `
 
@@ -748,7 +745,6 @@ function addTripActions() {
 
         </button>
 
-
         <button
             type="button"
             class="trip-action-btn"
@@ -759,7 +755,6 @@ function addTripActions() {
         </button>
 
     `;
-
 
     result.appendChild(actions);
 
@@ -786,7 +781,6 @@ if (resetBtn) {
                     "plannerForm"
                 )
                 .reset();
-
 
             document
                 .getElementById(
