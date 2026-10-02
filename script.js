@@ -1,133 +1,478 @@
-const exploreBtn =
-    document.getElementById("exploreBtn");
-
-if (exploreBtn) {
-
-    exploreBtn.addEventListener("click", function () {
-
-        const destination =
-            document.getElementById("destinationInput")
-                .value.trim();
-
-        if (!destination) {
-            alert("Please enter a destination.");
-            return;
-        }
-
-        document.getElementById("planDestination")
-            .value = destination;
-
-        document.getElementById("planner")
-            .scrollIntoView({
-                behavior: "smooth"
-            });
-
-    });
-
-}
+/* =========================================================
+   TRAVELSPHERE — SMART TRAVEL PLANNER
+   Commit 9 — Destination Details Experience
+   ========================================================= */
 
 
-/* =========================
-   Destination Selection
-========================= */
+/* =========================================================
+   DOM ELEMENTS
+   ========================================================= */
+
+const exploreBtn = document.getElementById("exploreBtn");
+const destinationInput = document.getElementById("destinationInput");
+const planner = document.getElementById("planner");
+
+const planDestination = document.getElementById("planDestination");
+const plannerForm = document.getElementById("plannerForm");
+const daysInput = document.getElementById("days");
+const budgetInput = document.getElementById("budget");
+const travelStyleInput = document.getElementById("travelStyle");
+
+const plannerResult = document.getElementById("plannerResult");
+const resetBtn = document.getElementById("resetBtn");
+
+
+/* =========================================================
+   DESTINATION DATABASE
+   ========================================================= */
+
+const destinationData = {
+
+    Dubai: {
+        country: "United Arab Emirates",
+        emoji: "🏙️",
+        category: "Luxury • Adventure • Shopping",
+        rating: "4.8/5",
+        bestTime: "November – March",
+        dailyCost: "$120 – $250",
+        description:
+            "Dubai combines futuristic architecture, luxury shopping, desert adventures and unforgettable city experiences.",
+
+        attractions: [
+            "Burj Khalifa",
+            "Dubai Mall",
+            "Palm Jumeirah",
+            "Dubai Marina",
+            "Desert Safari",
+            "Museum of the Future"
+        ],
+
+        tips: [
+            "Use the Dubai Metro for affordable city travel.",
+            "Book popular attractions in advance.",
+            "Carry water during outdoor activities.",
+            "Evenings are ideal for desert and city experiences."
+        ]
+    },
+
+    Paris: {
+        country: "France",
+        emoji: "🗼",
+        category: "Culture • Romance • Art",
+        rating: "4.9/5",
+        bestTime: "April – June / September – October",
+        dailyCost: "$100 – $220",
+        description:
+            "Paris is famous for its architecture, museums, cafés, fashion and iconic landmarks.",
+
+        attractions: [
+            "Eiffel Tower",
+            "Louvre Museum",
+            "Arc de Triomphe",
+            "Notre-Dame",
+            "Montmartre",
+            "Seine River"
+        ],
+
+        tips: [
+            "Use public transportation to explore the city.",
+            "Reserve museum tickets online.",
+            "Explore neighbourhoods on foot.",
+            "Try local cafés away from major tourist areas."
+        ]
+    },
+
+    Tokyo: {
+        country: "Japan",
+        emoji: "🌃",
+        category: "Technology • Culture • Food",
+        rating: "4.9/5",
+        bestTime: "March – May / October – November",
+        dailyCost: "$90 – $200",
+        description:
+            "Tokyo offers a unique combination of advanced technology, traditional Japanese culture, food and entertainment.",
+
+        attractions: [
+            "Tokyo Skytree",
+            "Shibuya Crossing",
+            "Senso-ji Temple",
+            "Akihabara",
+            "Meiji Shrine",
+            "Shinjuku"
+        ],
+
+        tips: [
+            "Get a rechargeable transport card.",
+            "Learn a few basic Japanese phrases.",
+            "Keep public spaces clean and quiet.",
+            "Try different neighbourhoods rather than staying in one area."
+        ]
+    },
+
+    Switzerland: {
+        country: "Switzerland",
+        emoji: "🏔️",
+        category: "Nature • Mountains • Adventure",
+        rating: "5.0/5",
+        bestTime: "June – September / December – February",
+        dailyCost: "$150 – $350",
+        description:
+            "Switzerland is known for spectacular Alps, crystal-clear lakes, scenic trains and charming mountain villages.",
+
+        attractions: [
+            "Swiss Alps",
+            "Interlaken",
+            "Lucerne",
+            "Jungfraujoch",
+            "Lake Geneva",
+            "Zermatt"
+        ],
+
+        tips: [
+            "Consider a Swiss Travel Pass.",
+            "Check mountain weather before travelling.",
+            "Book scenic train routes early.",
+            "Carry layers because mountain temperatures change quickly."
+        ]
+    }
+};
+
+
+/* =========================================================
+   DESTINATION SELECTION
+   ========================================================= */
 
 function selectDestination(city) {
 
-    document.getElementById("planDestination")
-        .value = city;
+    if (!destinationInput || !planDestination) {
+        return;
+    }
 
-    document.getElementById("planner")
-        .scrollIntoView({
-            behavior: "smooth"
+    destinationInput.value = city;
+    planDestination.value = city;
+
+    if (planner) {
+        planner.scrollIntoView({
+            behavior: "smooth",
+            block: "start"
         });
-
+    }
 }
 
 
-/* =========================
-   Validation
-========================= */
+/* =========================================================
+   DESTINATION DETAILS MODAL
+   ========================================================= */
 
-function validatePlannerInput(
-    destination,
-    days,
-    budget,
-    travelStyle
-) {
+function showDestinationDetails(city) {
+
+    const destination = destinationData[city];
 
     if (!destination) {
-        alert("Please enter a destination.");
-        return false;
+        console.warn("Destination not found:", city);
+        return;
     }
 
-    if (!days || days < 1 || days > 30) {
-        alert(
-            "Please enter a travel duration between 1 and 30 days."
-        );
-        return false;
-    }
+    closeDestinationDetails();
 
-    if (!budget) {
-        alert("Please select a travel budget.");
-        return false;
-    }
+    const modal = document.createElement("div");
 
-    if (!travelStyle) {
-        alert("Please select a travel style.");
-        return false;
-    }
+    modal.className = "destination-modal-overlay";
+    modal.id = "destinationDetailsModal";
 
-    return true;
+    modal.innerHTML = `
+        <div class="destination-modal-card">
+
+            <button
+                class="destination-modal-close"
+                onclick="closeDestinationDetails()"
+                aria-label="Close destination details"
+            >
+                ×
+            </button>
+
+            <div class="destination-modal-header">
+
+                <div class="destination-modal-icon">
+                    ${destination.emoji}
+                </div>
+
+                <div>
+                    <span class="destination-modal-category">
+                        ${destination.category}
+                    </span>
+
+                    <h2>${city}</h2>
+
+                    <p>${destination.country}</p>
+                </div>
+
+            </div>
+
+
+            <div class="destination-modal-description">
+                <p>
+                    ${destination.description}
+                </p>
+            </div>
+
+
+            <div class="destination-details-grid">
+
+                <div class="destination-info-box">
+                    <span>⭐</span>
+                    <strong>Rating</strong>
+                    <p>${destination.rating}</p>
+                </div>
+
+                <div class="destination-info-box">
+                    <span>🌤️</span>
+                    <strong>Best Time</strong>
+                    <p>${destination.bestTime}</p>
+                </div>
+
+                <div class="destination-info-box">
+                    <span>💰</span>
+                    <strong>Daily Cost</strong>
+                    <p>${destination.dailyCost}</p>
+                </div>
+
+                <div class="destination-info-box">
+                    <span>🌍</span>
+                    <strong>Country</strong>
+                    <p>${destination.country}</p>
+                </div>
+
+            </div>
+
+
+            <div class="destination-modal-section">
+
+                <h3>📍 Top Attractions</h3>
+
+                <div class="destination-attractions">
+
+                    ${destination.attractions
+                        .map(
+                            attraction => `
+                                <div class="destination-attraction">
+                                    <span>✦</span>
+                                    ${attraction}
+                                </div>
+                            `
+                        )
+                        .join("")}
+
+                </div>
+
+            </div>
+
+
+            <div class="destination-modal-section">
+
+                <h3>💡 Travel Tips</h3>
+
+                <div class="destination-tips">
+
+                    ${destination.tips
+                        .map(
+                            tip => `
+                                <div class="destination-tip">
+                                    <span>✓</span>
+                                    <p>${tip}</p>
+                                </div>
+                            `
+                        )
+                        .join("")}
+
+                </div>
+
+            </div>
+
+
+            <div class="destination-modal-footer">
+
+                <button
+                    class="destination-plan-btn"
+                    onclick="planDestinationFromDetails('${city}')"
+                >
+                    🧳 Plan This Trip
+                </button>
+
+            </div>
+
+        </div>
+    `;
+
+    document.body.appendChild(modal);
+
+    document.body.classList.add("modal-open");
+
+    requestAnimationFrame(() => {
+        modal.classList.add("active");
+    });
+
+
+    modal.addEventListener("click", function (event) {
+
+        if (event.target === modal) {
+            closeDestinationDetails();
+        }
+
+    });
+
+
+    document.addEventListener(
+        "keydown",
+        handleDestinationEscape
+    );
 }
 
 
-/* =========================
-   Planner Form
-========================= */
+/* =========================================================
+   CLOSE DESTINATION MODAL
+   ========================================================= */
 
-const plannerForm =
-    document.getElementById("plannerForm");
+function closeDestinationDetails() {
 
-if (plannerForm) {
+    const modal = document.getElementById(
+        "destinationDetailsModal"
+    );
 
-    plannerForm.addEventListener(
-        "submit",
-        function (event) {
+    if (!modal) {
+        return;
+    }
 
-            event.preventDefault();
+    modal.classList.remove("active");
 
-            const destination =
-                document.getElementById("planDestination")
-                    .value.trim();
+    setTimeout(() => {
 
-            const days =
-                Number(
-                    document.getElementById("days").value
-                );
+        modal.remove();
 
-            const budget =
-                document.getElementById("budget").value;
+        document.body.classList.remove("modal-open");
 
-            const travelStyle =
-                document.getElementById("travelStyle").value;
+    }, 250);
 
-            if (
-                !validatePlannerInput(
-                    destination,
-                    days,
-                    budget,
-                    travelStyle
-                )
-            ) {
-                return;
+    document.removeEventListener(
+        "keydown",
+        handleDestinationEscape
+    );
+}
+
+
+/* =========================================================
+   ESC KEY
+   ========================================================= */
+
+function handleDestinationEscape(event) {
+
+    if (event.key === "Escape") {
+        closeDestinationDetails();
+    }
+}
+
+
+/* =========================================================
+   PLAN FROM DESTINATION DETAILS
+   ========================================================= */
+
+function planDestinationFromDetails(city) {
+
+    closeDestinationDetails();
+
+    setTimeout(() => {
+
+        selectDestination(city);
+
+        if (planner) {
+            planner.scrollIntoView({
+                behavior: "smooth",
+                block: "start"
+            });
+        }
+
+    }, 300);
+}
+
+
+/* =========================================================
+   ADD DETAILS BUTTONS TO DESTINATION CARDS
+   ========================================================= */
+
+function initializeDestinationDetails() {
+
+    const cards = document.querySelectorAll(
+        ".destination-card"
+    );
+
+    cards.forEach(card => {
+
+        const heading = card.querySelector("h3");
+
+        if (!heading) {
+            return;
+        }
+
+        const city = heading.textContent.trim();
+
+        if (!destinationData[city]) {
+            return;
+        }
+
+        if (
+            card.querySelector(
+                ".destination-details-btn"
+            )
+        ) {
+            return;
+        }
+
+        const button = document.createElement("button");
+
+        button.className =
+            "destination-details-btn";
+
+        button.type = "button";
+
+        button.innerHTML =
+            "Explore Details →";
+
+        button.addEventListener(
+            "click",
+            function (event) {
+
+                event.preventDefault();
+                event.stopPropagation();
+
+                showDestinationDetails(city);
+
             }
+        );
 
-            generateTrip(
-                destination,
-                days,
-                budget,
-                travelStyle
-            );
+        card.appendChild(button);
+
+    });
+}
+
+
+/* =========================================================
+   EXPLORE BUTTON
+   ========================================================= */
+
+if (exploreBtn) {
+
+    exploreBtn.addEventListener(
+        "click",
+        function () {
+
+            if (planner) {
+
+                planner.scrollIntoView({
+                    behavior: "smooth",
+                    block: "start"
+                });
+
+            }
 
         }
     );
@@ -135,9 +480,9 @@ if (plannerForm) {
 }
 
 
-/* =========================
-   Budget Profile
-========================= */
+/* =========================================================
+   BUDGET PROFILE
+   ========================================================= */
 
 function getBudgetProfile(budget) {
 
@@ -166,468 +511,450 @@ function getBudgetProfile(budget) {
 
     };
 
-    return profiles[budget] ||
-        profiles.Standard;
+    return profiles[budget] || profiles.Standard;
 }
 
 
-/* =========================
-   Activity Generator
-========================= */
+/* =========================================================
+   ACTIVITY GENERATOR
+   ========================================================= */
 
-function getActivities(style) {
+function generateActivities(city, style) {
 
     const activities = {
 
-        Adventure: {
+        Adventure: [
+            `Explore ${city}'s outdoor attractions`,
+            "Try a local adventure activity",
+            "Take a scenic exploration tour",
+            "Discover hidden travel spots"
+        ],
 
-            morning:
-                "Explore a famous local attraction",
+        Relaxation: [
+            "Enjoy a relaxing morning",
+            "Visit a peaceful local attraction",
+            "Enjoy a wellness experience",
+            "Watch the sunset"
+        ],
 
-            afternoon:
-                "Try an exciting outdoor activity",
+        Luxury: [
+            "Enjoy a premium dining experience",
+            "Visit an exclusive attraction",
+            "Explore luxury shopping areas",
+            "Enjoy an evening city experience"
+        ],
 
-            evening:
-                "Discover local food and nightlife"
+        Family: [
+            "Visit a family-friendly attraction",
+            "Enjoy a local cultural experience",
+            "Try family-friendly activities",
+            "Explore a famous landmark"
+        ],
 
-        },
+        Solo: [
+            "Explore the city independently",
+            "Visit a local cultural attraction",
+            "Try local cuisine",
+            "Explore the city at your own pace"
+        ],
 
-        Relaxation: {
-
-            morning:
-                "Enjoy a peaceful breakfast",
-
-            afternoon:
-                "Visit a relaxing scenic location",
-
-            evening:
-                "Enjoy a calm dinner and sunset"
-
-        },
-
-        Culture: {
-
-            morning:
-                "Visit a historical landmark",
-
-            afternoon:
-                "Explore a museum or cultural center",
-
-            evening:
-                "Experience local food and traditions"
-
-        },
-
-        Family: {
-
-            morning:
-                "Enjoy a family-friendly attraction",
-
-            afternoon:
-                "Visit a fun activity center",
-
-            evening:
-                "Enjoy a family dinner"
-
-        }
+        "Honeymoon": [
+            "Enjoy a romantic city walk",
+            "Have a special dinner",
+            "Visit a scenic attraction",
+            "Enjoy a private experience"
+        ]
 
     };
 
-    return activities[style] ||
-        activities.Culture;
+    return (
+        activities[style] ||
+        activities.Adventure
+    );
 }
 
 
-/* =========================
-   Generate Trip
-========================= */
+/* =========================================================
+   VALIDATION
+   ========================================================= */
 
-function generateTrip(
-    destination,
-    days,
-    budget,
-    travelStyle
-) {
+function validatePlanner() {
 
-    const result =
-        document.getElementById(
-            "plannerResult"
+    if (!planDestination || !daysInput || !budgetInput) {
+        return false;
+    }
+
+    const city = planDestination.value.trim();
+
+    const days = Number(daysInput.value);
+
+    const budget = budgetInput.value;
+
+    if (!city) {
+
+        alert(
+            "Please select a destination."
         );
 
-    const profile =
-        getBudgetProfile(budget);
+        planDestination.focus();
 
-    const accommodation =
-        profile.accommodation * days;
+        return false;
+    }
 
-    const food =
-        profile.food * days;
-
-    const transport =
-        profile.transport * days;
-
-    const activitiesCost =
-        profile.activities * days;
-
-    const totalBudget =
-        accommodation +
-        food +
-        transport +
-        activitiesCost;
-
-    const dailyBudget =
-        totalBudget / days;
-
-    const activities =
-        getActivities(travelStyle);
-
-    let itinerary = "";
-
-    for (
-        let day = 1;
-        day <= days;
-        day++
+    if (
+        !Number.isFinite(days) ||
+        days < 1 ||
+        days > 30
     ) {
 
-        itinerary += `
+        alert(
+            "Trip duration must be between 1 and 30 days."
+        );
 
-            <div class="day-card">
+        daysInput.focus();
 
-                <h4>
-                    Day ${day}
-                </h4>
-
-                <p>
-                    🌅
-                    <strong>Morning:</strong>
-                    ${activities.morning}
-                    in ${destination}.
-                </p>
-
-                <p>
-                    ☀️
-                    <strong>Afternoon:</strong>
-                    ${activities.afternoon}.
-                </p>
-
-                <p>
-                    🌙
-                    <strong>Evening:</strong>
-                    ${activities.evening}.
-                </p>
-
-                <div class="day-budget">
-
-                    💰 Daily estimated cost:
-                    $${dailyBudget.toFixed(0)}
-
-                </div>
-
-            </div>
-
-        `;
-
+        return false;
     }
 
+    if (!budget) {
 
-    result.innerHTML = `
+        alert(
+            "Please select a budget."
+        );
 
-        <div class="generated-result">
+        budgetInput.focus();
 
-            <div class="result-icon">
-                🗺️
-            </div>
+        return false;
+    }
 
-            <h3>
-                ${destination} Itinerary
-            </h3>
-
-            <p>
-                Your personalized
-                ${travelStyle.toLowerCase()}
-                travel plan is ready.
-            </p>
+    return true;
+}
 
 
-            <div class="trip-summary">
+/* =========================================================
+   GENERATE TRIP
+   ========================================================= */
 
-                <div class="summary-box">
+if (plannerForm) {
 
-                    📍
+    plannerForm.addEventListener(
+        "submit",
+        function (event) {
 
-                    <strong>
-                        ${destination}
-                    </strong>
+            event.preventDefault();
+
+            if (!validatePlanner()) {
+                return;
+            }
+
+            const city =
+                planDestination.value.trim();
+
+            const days =
+                Number(daysInput.value);
+
+            const budget =
+                budgetInput.value;
+
+            const style =
+                travelStyleInput
+                    ? travelStyleInput.value
+                    : "Adventure";
+
+
+            const profile =
+                getBudgetProfile(budget);
+
+
+            const accommodation =
+                profile.accommodation * days;
+
+            const food =
+                profile.food * days;
+
+            const transport =
+                profile.transport * days;
+
+            const activitiesCost =
+                profile.activities * days;
+
+            const totalBudget =
+                accommodation +
+                food +
+                transport +
+                activitiesCost;
+
+            const dailyAverage =
+                totalBudget / days;
+
+
+            const activities =
+                generateActivities(
+                    city,
+                    style
+                );
+
+
+            let itineraryHTML = "";
+
+
+            for (
+                let day = 1;
+                day <= days;
+                day++
+            ) {
+
+                const activity =
+                    activities[
+                        (day - 1) %
+                        activities.length
+                    ];
+
+                itineraryHTML += `
+
+                    <div class="itinerary-day">
+
+                        <div class="day-number">
+                            ${day}
+                        </div>
+
+                        <div class="day-content">
+
+                            <h4>
+                                Day ${day}
+                            </h4>
+
+                            <p>
+                                ${activity}
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                `;
+            }
+
+
+            const generatedTime =
+                new Date().toLocaleString();
+
+
+            plannerResult.innerHTML = `
+
+                <div class="result-header">
+
+                    <div>
+                        <span class="result-label">
+                            YOUR TRIP PLAN
+                        </span>
+
+                        <h3>
+                            ${city}
+                        </h3>
+
+                        <p>
+                            ${days} Days •
+                            ${style} Travel •
+                            ${budget} Budget
+                        </p>
+                    </div>
+
+                    <div class="result-icon">
+                        ✈️
+                    </div>
 
                 </div>
 
 
-                <div class="summary-box">
+                <div class="budget-analytics">
 
-                    📅
+                    <h3>
+                        💰 Budget Analytics
+                    </h3>
 
-                    <strong>
-                        ${days} Days
-                    </strong>
+                    <div class="budget-row">
+                        <span>
+                            🏨 Accommodation
+                        </span>
+                        <strong>
+                            $${accommodation}
+                        </strong>
+                    </div>
 
-                </div>
+                    <div class="budget-row">
+                        <span>
+                            🍴 Food
+                        </span>
+                        <strong>
+                            $${food}
+                        </strong>
+                    </div>
 
+                    <div class="budget-row">
+                        <span>
+                            🚕 Transport
+                        </span>
+                        <strong>
+                            $${transport}
+                        </strong>
+                    </div>
 
-                <div class="summary-box">
+                    <div class="budget-row">
+                        <span>
+                            🎟️ Activities
+                        </span>
+                        <strong>
+                            $${activitiesCost}
+                        </strong>
+                    </div>
 
-                    💰
+                    <div class="budget-total">
 
-                    <strong>
-                        ${budget}
-                    </strong>
+                        <span>
+                            Total Estimated Budget
+                        </span>
 
-                </div>
+                        <strong>
+                            $${totalBudget}
+                        </strong>
 
+                    </div>
 
-                <div class="summary-box">
+                    <div class="budget-average">
 
-                    🎯
+                        Average Per Day:
+                        <strong>
+                            $${dailyAverage.toFixed(2)}
+                        </strong>
 
-                    <strong>
-                        ${travelStyle}
-                    </strong>
-
-                </div>
-
-            </div>
-
-
-            <div class="budget-analytics">
-
-                <h4>
-                    💰 Budget Analytics
-                </h4>
-
-
-                <div class="budget-row">
-
-                    <span>
-                        🏨 Accommodation
-                    </span>
-
-                    <strong>
-                        $${accommodation}
-                    </strong>
-
-                </div>
-
-
-                <div class="budget-row">
-
-                    <span>
-                        🍽️ Food
-                    </span>
-
-                    <strong>
-                        $${food}
-                    </strong>
+                    </div>
 
                 </div>
 
 
-                <div class="budget-row">
+                <div class="itinerary-section">
 
-                    <span>
-                        🚕 Transport
-                    </span>
+                    <h3>
+                        🗓️ Your Itinerary
+                    </h3>
 
-                    <strong>
-                        $${transport}
-                    </strong>
+                    ${itineraryHTML}
 
                 </div>
 
 
-                <div class="budget-row">
+                <div class="trip-actions">
 
-                    <span>
-                        🎟️ Activities
-                    </span>
+                    <button
+                        type="button"
+                        onclick="copyTripPlan()"
+                    >
+                        📋 Copy Plan
+                    </button>
 
-                    <strong>
-                        $${activitiesCost}
-                    </strong>
+                    <button
+                        type="button"
+                        onclick="printTripPlan()"
+                    >
+                        🖨️ Print
+                    </button>
+
+                    <button
+                        type="button"
+                        onclick="resetPlanner()"
+                    >
+                        🔄 New Trip
+                    </button>
 
                 </div>
 
 
-                <div class="budget-total">
+                <div class="generated-time">
 
-                    <span>
-                        Estimated Total
-                    </span>
-
-                    <strong>
-                        $${totalBudget}
-                    </strong>
+                    Generated:
+                    ${generatedTime}
 
                 </div>
 
-            </div>
+            `;
 
 
-            <div class="plan-highlight">
-
-                💵
-
-                Estimated daily average:
-
-                <strong>
-                    $${dailyBudget.toFixed(0)}
-                </strong>
-
-            </div>
+            plannerResult.classList.add(
+                "result-visible"
+            );
 
 
-            <div class="itinerary">
+            plannerResult.scrollIntoView({
+                behavior: "smooth",
+                block: "start"
+            });
 
-                ${itinerary}
-
-            </div>
-
-        </div>
-
-    `;
-
-
-    addGeneratedTime();
-
-    addTripActions();
-
-
-    result.scrollIntoView({
-        behavior: "smooth",
-        block: "center"
-    });
+        }
+    );
 
 }
 
 
-/* =========================
-   Generated Time
-========================= */
-
-function addGeneratedTime() {
-
-    const result =
-        document.getElementById(
-            "plannerResult"
-        );
-
-    const oldTime =
-        result.querySelector(
-            ".trip-generated-time"
-        );
-
-    if (oldTime) {
-        oldTime.remove();
-    }
-
-    const timestamp =
-        document.createElement("p");
-
-    timestamp.className =
-        "trip-generated-time";
-
-    timestamp.textContent =
-        `Generated on ${
-            new Date().toLocaleString(
-                "en-IN",
-                {
-                    dateStyle: "medium",
-                    timeStyle: "short"
-                }
-            )
-        }`;
-
-    result.appendChild(timestamp);
-
-}
-
-
-/* =========================
-   Copy Plan
-========================= */
+/* =========================================================
+   COPY TRIP PLAN
+   ========================================================= */
 
 function copyTripPlan() {
 
-    const result =
-        document.getElementById(
-            "plannerResult"
-        );
-
-    const text =
-        result.innerText.trim();
-
-    if (!text) {
-
-        alert(
-            "Generate a trip plan first."
-        );
-
+    if (!plannerResult) {
         return;
     }
 
+    const text =
+        plannerResult.innerText;
+
     navigator.clipboard
         .writeText(text)
-        .then(function () {
+        .then(() => {
 
             alert(
                 "Trip plan copied successfully!"
             );
 
         })
-        .catch(function () {
+        .catch(() => {
 
             alert(
                 "Unable to copy the trip plan."
             );
 
         });
-
 }
 
 
-/* =========================
-   Print Plan
-========================= */
+/* =========================================================
+   PRINT TRIP PLAN
+   ========================================================= */
 
 function printTripPlan() {
 
-    const result =
-        document.getElementById(
-            "plannerResult"
-        );
-
-    if (!result.innerText.trim()) {
-
-        alert(
-            "Generate a trip plan first."
-        );
-
+    if (!plannerResult) {
         return;
     }
 
     const printWindow =
-        window.open("", "_blank");
+        window.open(
+            "",
+            "_blank"
+        );
 
     if (!printWindow) {
 
         alert(
-            "Please allow pop-ups to print the trip plan."
+            "Please allow pop-ups to print your trip."
         );
 
         return;
     }
 
-    printWindow.document.write(`
 
-        <!DOCTYPE html>
+    printWindow.document.write(`
 
         <html>
 
@@ -642,36 +969,36 @@ function printTripPlan() {
                 body {
                     font-family: Arial, sans-serif;
                     padding: 40px;
-                    color: #18202f;
                     line-height: 1.6;
                 }
 
-                h1 {
-                    color: #087cff;
+                h1,
+                h2,
+                h3,
+                h4 {
+                    color: #222;
                 }
 
                 .budget-row,
                 .budget-total {
                     display: flex;
                     justify-content: space-between;
-                    padding: 10px;
+                    padding: 8px 0;
+                }
+
+                .itinerary-day {
+                    display: flex;
+                    gap: 15px;
+                    margin: 15px 0;
+                    padding: 15px;
                     border-bottom: 1px solid #ddd;
                 }
 
-                .budget-total {
-                    font-size: 18px;
+                .day-number {
                     font-weight: bold;
                 }
 
-                .day-card {
-                    padding: 20px;
-                    margin: 15px 0;
-                    border: 1px solid #ddd;
-                    border-radius: 12px;
-                    page-break-inside: avoid;
-                }
-
-                #tripActions {
+                button {
                     display: none;
                 }
 
@@ -682,10 +1009,10 @@ function printTripPlan() {
         <body>
 
             <h1>
-                🌍 TravelSphere
+                TravelSphere
             </h1>
 
-            ${result.innerHTML}
+            ${plannerResult.innerHTML}
 
         </body>
 
@@ -697,113 +1024,79 @@ function printTripPlan() {
 
     printWindow.focus();
 
-    setTimeout(function () {
+    setTimeout(() => {
 
         printWindow.print();
 
     }, 500);
-
 }
 
 
-/* =========================
-   Trip Actions
-========================= */
+/* =========================================================
+   RESET PLANNER
+   ========================================================= */
 
-function addTripActions() {
+function resetPlanner() {
 
-    const result =
-        document.getElementById(
-            "plannerResult"
-        );
-
-    const oldActions =
-        document.getElementById(
-            "tripActions"
-        );
-
-    if (oldActions) {
-        oldActions.remove();
+    if (plannerForm) {
+        plannerForm.reset();
     }
 
-    const actions =
-        document.createElement(
-            "div"
+    if (plannerResult) {
+
+        plannerResult.innerHTML = "";
+
+        plannerResult.classList.remove(
+            "result-visible"
         );
 
-    actions.id =
-        "tripActions";
+    }
 
-    actions.innerHTML = `
+    if (planner) {
 
-        <button
-            type="button"
-            class="trip-action-btn"
-            onclick="copyTripPlan()">
+        planner.scrollIntoView({
+            behavior: "smooth",
+            block: "start"
+        });
 
-            📋 Copy Plan
-
-        </button>
-
-        <button
-            type="button"
-            class="trip-action-btn"
-            onclick="printTripPlan()">
-
-            🖨️ Print Plan
-
-        </button>
-
-    `;
-
-    result.appendChild(actions);
-
+    }
 }
 
-
-/* =========================
-   Reset Planner
-========================= */
-
-const resetBtn =
-    document.getElementById(
-        "resetBtn"
-    );
 
 if (resetBtn) {
 
     resetBtn.addEventListener(
         "click",
-        function () {
-
-            document
-                .getElementById(
-                    "plannerForm"
-                )
-                .reset();
-
-            document
-                .getElementById(
-                    "plannerResult"
-                )
-                .innerHTML = `
-
-                    <div class="result-icon">
-                        ✈️
-                    </div>
-
-                    <h3>
-                        Your Trip Plan
-                    </h3>
-
-                    <p>
-                        Fill in the planner to generate
-                        your day-by-day itinerary.
-                    </p>
-
-                `;
-
-        }
+        resetPlanner
     );
+
+}
+
+
+/* =========================================================
+   INITIALIZE
+   ========================================================= */
+
+function initializeTravelSphere() {
+
+    initializeDestinationDetails();
+
+}
+
+
+/* =========================================================
+   DOM READY
+   ========================================================= */
+
+if (document.readyState === "loading") {
+
+    document.addEventListener(
+        "DOMContentLoaded",
+        initializeTravelSphere
+    );
+
+} else {
+
+    initializeTravelSphere();
 
 }
