@@ -1,6 +1,6 @@
 /* =========================================================
    TRAVELSPHERE — SMART TRAVEL PLANNER
-   Commit 9 — Destination Details Experience
+   COMMIT 10 — LIVE TRAVEL DATA
    ========================================================= */
 
 
@@ -35,6 +35,12 @@ const destinationData = {
         rating: "4.8/5",
         bestTime: "November – March",
         dailyCost: "$120 – $250",
+
+        latitude: 25.2048,
+        longitude: 55.2708,
+
+        currency: "AED",
+
         description:
             "Dubai combines futuristic architecture, luxury shopping, desert adventures and unforgettable city experiences.",
 
@@ -55,6 +61,7 @@ const destinationData = {
         ]
     },
 
+
     Paris: {
         country: "France",
         emoji: "🗼",
@@ -62,6 +69,12 @@ const destinationData = {
         rating: "4.9/5",
         bestTime: "April – June / September – October",
         dailyCost: "$100 – $220",
+
+        latitude: 48.8566,
+        longitude: 2.3522,
+
+        currency: "EUR",
+
         description:
             "Paris is famous for its architecture, museums, cafés, fashion and iconic landmarks.",
 
@@ -82,6 +95,7 @@ const destinationData = {
         ]
     },
 
+
     Tokyo: {
         country: "Japan",
         emoji: "🌃",
@@ -89,6 +103,12 @@ const destinationData = {
         rating: "4.9/5",
         bestTime: "March – May / October – November",
         dailyCost: "$90 – $200",
+
+        latitude: 35.6762,
+        longitude: 139.6503,
+
+        currency: "JPY",
+
         description:
             "Tokyo offers a unique combination of advanced technology, traditional Japanese culture, food and entertainment.",
 
@@ -109,6 +129,7 @@ const destinationData = {
         ]
     },
 
+
     Switzerland: {
         country: "Switzerland",
         emoji: "🏔️",
@@ -116,6 +137,12 @@ const destinationData = {
         rating: "5.0/5",
         bestTime: "June – September / December – February",
         dailyCost: "$150 – $350",
+
+        latitude: 46.9480,
+        longitude: 7.4474,
+
+        currency: "CHF",
+
         description:
             "Switzerland is known for spectacular Alps, crystal-clear lakes, scenic trains and charming mountain villages.",
 
@@ -135,6 +162,28 @@ const destinationData = {
             "Carry layers because mountain temperatures change quickly."
         ]
     }
+
+};
+
+
+/* =========================================================
+   CURRENCY DATABASE
+   ========================================================= */
+
+const currencyRates = {
+
+    INR: 1,
+
+    USD: 0.0119,
+
+    AED: 0.0437,
+
+    EUR: 0.0102,
+
+    JPY: 1.76,
+
+    CHF: 0.0094
+
 };
 
 
@@ -149,47 +198,55 @@ function selectDestination(city) {
     }
 
     destinationInput.value = city;
+
     planDestination.value = city;
 
     if (planner) {
+
         planner.scrollIntoView({
             behavior: "smooth",
             block: "start"
         });
+
     }
 }
 
 
 /* =========================================================
-   DESTINATION DETAILS MODAL
+   DESTINATION DETAILS
    ========================================================= */
 
 function showDestinationDetails(city) {
 
-    const destination = destinationData[city];
+    const destination =
+        destinationData[city];
 
     if (!destination) {
-        console.warn("Destination not found:", city);
         return;
     }
 
     closeDestinationDetails();
 
-    const modal = document.createElement("div");
+    const modal =
+        document.createElement("div");
 
-    modal.className = "destination-modal-overlay";
-    modal.id = "destinationDetailsModal";
+    modal.className =
+        "destination-modal-overlay";
+
+    modal.id =
+        "destinationDetailsModal";
 
     modal.innerHTML = `
+
         <div class="destination-modal-card">
 
             <button
                 class="destination-modal-close"
                 onclick="closeDestinationDetails()"
-                aria-label="Close destination details"
             >
                 ×
             </button>
+
 
             <div class="destination-modal-header">
 
@@ -198,22 +255,30 @@ function showDestinationDetails(city) {
                 </div>
 
                 <div>
+
                     <span class="destination-modal-category">
                         ${destination.category}
                     </span>
 
-                    <h2>${city}</h2>
+                    <h2>
+                        ${city}
+                    </h2>
 
-                    <p>${destination.country}</p>
+                    <p>
+                        ${destination.country}
+                    </p>
+
                 </div>
 
             </div>
 
 
             <div class="destination-modal-description">
+
                 <p>
                     ${destination.description}
                 </p>
+
             </div>
 
 
@@ -248,7 +313,9 @@ function showDestinationDetails(city) {
 
             <div class="destination-modal-section">
 
-                <h3>📍 Top Attractions</h3>
+                <h3>
+                    📍 Top Attractions
+                </h3>
 
                 <div class="destination-attractions">
 
@@ -270,7 +337,9 @@ function showDestinationDetails(city) {
 
             <div class="destination-modal-section">
 
-                <h3>💡 Travel Tips</h3>
+                <h3>
+                    💡 Travel Tips
+                </h3>
 
                 <div class="destination-tips">
 
@@ -302,79 +371,94 @@ function showDestinationDetails(city) {
             </div>
 
         </div>
+
     `;
+
 
     document.body.appendChild(modal);
 
-    document.body.classList.add("modal-open");
+    document.body.classList.add(
+        "modal-open"
+    );
+
 
     requestAnimationFrame(() => {
+
         modal.classList.add("active");
+
     });
 
 
-    modal.addEventListener("click", function (event) {
+    modal.addEventListener(
+        "click",
+        event => {
 
-        if (event.target === modal) {
-            closeDestinationDetails();
+            if (
+                event.target === modal
+            ) {
+
+                closeDestinationDetails();
+
+            }
+
         }
-
-    });
+    );
 
 
     document.addEventListener(
         "keydown",
         handleDestinationEscape
     );
+
 }
 
 
-/* =========================================================
-   CLOSE DESTINATION MODAL
-   ========================================================= */
-
 function closeDestinationDetails() {
 
-    const modal = document.getElementById(
-        "destinationDetailsModal"
-    );
+    const modal =
+        document.getElementById(
+            "destinationDetailsModal"
+        );
 
     if (!modal) {
         return;
     }
 
-    modal.classList.remove("active");
+    modal.classList.remove(
+        "active"
+    );
 
     setTimeout(() => {
 
         modal.remove();
 
-        document.body.classList.remove("modal-open");
+        document.body.classList.remove(
+            "modal-open"
+        );
 
     }, 250);
+
 
     document.removeEventListener(
         "keydown",
         handleDestinationEscape
     );
+
 }
 
-
-/* =========================================================
-   ESC KEY
-   ========================================================= */
 
 function handleDestinationEscape(event) {
 
-    if (event.key === "Escape") {
+    if (
+        event.key === "Escape"
+    ) {
+
         closeDestinationDetails();
+
     }
+
 }
 
-
-/* =========================================================
-   PLAN FROM DESTINATION DETAILS
-   ========================================================= */
 
 function planDestinationFromDetails(city) {
 
@@ -384,40 +468,44 @@ function planDestinationFromDetails(city) {
 
         selectDestination(city);
 
-        if (planner) {
-            planner.scrollIntoView({
-                behavior: "smooth",
-                block: "start"
-            });
-        }
-
     }, 300);
+
 }
 
 
 /* =========================================================
-   ADD DETAILS BUTTONS TO DESTINATION CARDS
+   DESTINATION CARD BUTTONS
    ========================================================= */
 
 function initializeDestinationDetails() {
 
-    const cards = document.querySelectorAll(
-        ".destination-card"
-    );
+    const cards =
+        document.querySelectorAll(
+            ".destination-card"
+        );
+
 
     cards.forEach(card => {
 
-        const heading = card.querySelector("h3");
+        const heading =
+            card.querySelector("h3");
+
 
         if (!heading) {
             return;
         }
 
-        const city = heading.textContent.trim();
 
-        if (!destinationData[city]) {
+        const city =
+            heading.textContent.trim();
+
+
+        if (
+            !destinationData[city]
+        ) {
             return;
         }
+
 
         if (
             card.querySelector(
@@ -427,55 +515,455 @@ function initializeDestinationDetails() {
             return;
         }
 
-        const button = document.createElement("button");
+
+        const button =
+            document.createElement(
+                "button"
+            );
+
 
         button.className =
             "destination-details-btn";
 
-        button.type = "button";
+
+        button.type =
+            "button";
+
 
         button.innerHTML =
             "Explore Details →";
 
+
         button.addEventListener(
             "click",
-            function (event) {
+            event => {
 
                 event.preventDefault();
+
                 event.stopPropagation();
 
-                showDestinationDetails(city);
+                showDestinationDetails(
+                    city
+                );
 
             }
         );
 
+
         card.appendChild(button);
 
     });
+
 }
 
 
 /* =========================================================
-   EXPLORE BUTTON
+   LIVE WEATHER
    ========================================================= */
 
-if (exploreBtn) {
+async function loadWeather(city) {
 
-    exploreBtn.addEventListener(
-        "click",
-        function () {
+    const destination =
+        destinationData[city];
 
-            if (planner) {
 
-                planner.scrollIntoView({
-                    behavior: "smooth",
-                    block: "start"
-                });
+    if (!destination) {
 
-            }
+        showWeatherError(
+            "Weather information is unavailable for this destination."
+        );
+
+        return;
+
+    }
+
+
+    const weatherCard =
+        document.getElementById(
+            "weatherData"
+        );
+
+
+    if (!weatherCard) {
+        return;
+    }
+
+
+    weatherCard.innerHTML = `
+
+        <div class="live-loading">
+
+            <div class="loading-spinner"></div>
+
+            <p>
+                Loading live weather...
+            </p>
+
+        </div>
+
+    `;
+
+
+    try {
+
+        const url =
+            `https://api.open-meteo.com/v1/forecast` +
+            `?latitude=${destination.latitude}` +
+            `&longitude=${destination.longitude}` +
+            `&current=temperature_2m,relative_humidity_2m,weather_code,wind_speed_10m` +
+            `&timezone=auto`;
+
+
+        const response =
+            await fetch(url);
+
+
+        if (!response.ok) {
+
+            throw new Error(
+                "Weather API request failed"
+            );
 
         }
+
+
+        const data =
+            await response.json();
+
+
+        const current =
+            data.current;
+
+
+        const weatherText =
+            getWeatherDescription(
+                current.weather_code
+            );
+
+
+        weatherCard.innerHTML = `
+
+            <div class="weather-main">
+
+                <div class="weather-temperature">
+
+                    ${Math.round(
+                        current.temperature_2m
+                    )}°C
+
+                </div>
+
+                <div class="weather-condition">
+
+                    ${weatherText}
+
+                </div>
+
+            </div>
+
+
+            <div class="weather-stats">
+
+                <div>
+
+                    <span>💧</span>
+
+                    <strong>
+                        ${current.relative_humidity_2m}%
+                    </strong>
+
+                    <small>
+                        Humidity
+                    </small>
+
+                </div>
+
+
+                <div>
+
+                    <span>💨</span>
+
+                    <strong>
+                        ${current.wind_speed_10m}
+                        km/h
+                    </strong>
+
+                    <small>
+                        Wind
+                    </small>
+
+                </div>
+
+
+                <div>
+
+                    <span>🕐</span>
+
+                    <strong>
+                        Live
+                    </strong>
+
+                    <small>
+                        Current
+                    </small>
+
+                </div>
+
+            </div>
+
+        `;
+
+    }
+
+    catch (error) {
+
+        console.error(
+            "Weather error:",
+            error
+        );
+
+
+        showWeatherError(
+            "Unable to load live weather. Please try again."
+        );
+
+    }
+
+}
+
+
+/* =========================================================
+   WEATHER DESCRIPTION
+   ========================================================= */
+
+function getWeatherDescription(code) {
+
+    const weatherCodes = {
+
+        0: "☀️ Clear Sky",
+
+        1: "🌤️ Mainly Clear",
+
+        2: "⛅ Partly Cloudy",
+
+        3: "☁️ Overcast",
+
+        45: "🌫️ Foggy",
+
+        48: "🌫️ Rime Fog",
+
+        51: "🌦️ Light Drizzle",
+
+        53: "🌦️ Drizzle",
+
+        55: "🌧️ Heavy Drizzle",
+
+        61: "🌦️ Light Rain",
+
+        63: "🌧️ Rain",
+
+        65: "🌧️ Heavy Rain",
+
+        71: "🌨️ Light Snow",
+
+        73: "❄️ Snow",
+
+        75: "❄️ Heavy Snow",
+
+        80: "🌦️ Rain Showers",
+
+        81: "🌧️ Rain Showers",
+
+        82: "⛈️ Heavy Showers",
+
+        95: "⛈️ Thunderstorm",
+
+        96: "⛈️ Thunderstorm + Hail",
+
+        99: "⛈️ Heavy Thunderstorm"
+
+    };
+
+
+    return (
+        weatherCodes[code] ||
+        "🌍 Current Weather"
     );
+
+}
+
+
+/* =========================================================
+   WEATHER ERROR
+   ========================================================= */
+
+function showWeatherError(message) {
+
+    const weatherCard =
+        document.getElementById(
+            "weatherData"
+        );
+
+
+    if (!weatherCard) {
+        return;
+    }
+
+
+    weatherCard.innerHTML = `
+
+        <div class="live-error">
+
+            <span>
+                ⚠️
+            </span>
+
+            <p>
+                ${message}
+            </p>
+
+            <button
+                onclick="loadWeatherFromPlanner()"
+            >
+                Try Again
+            </button>
+
+        </div>
+
+    `;
+
+}
+
+
+/* =========================================================
+   WEATHER FROM PLANNER
+   ========================================================= */
+
+function loadWeatherFromPlanner() {
+
+    const city =
+        planDestination
+            ? planDestination.value
+            : "";
+
+
+    if (
+        city &&
+        destinationData[city]
+    ) {
+
+        loadWeather(city);
+
+    }
+
+}
+
+
+/* =========================================================
+   CURRENCY CONVERTER
+   ========================================================= */
+
+function convertCurrency() {
+
+    const amountInput =
+        document.getElementById(
+            "currencyAmount"
+        );
+
+    const fromCurrency =
+        document.getElementById(
+            "fromCurrency"
+        );
+
+    const toCurrency =
+        document.getElementById(
+            "toCurrency"
+        );
+
+    const currencyResult =
+        document.getElementById(
+            "currencyResult"
+        );
+
+
+    if (
+        !amountInput ||
+        !fromCurrency ||
+        !toCurrency ||
+        !currencyResult
+    ) {
+
+        return;
+
+    }
+
+
+    const amount =
+        Number(
+            amountInput.value
+        );
+
+
+    if (
+        !Number.isFinite(amount) ||
+        amount < 0
+    ) {
+
+        currencyResult.innerHTML =
+            "Enter a valid amount.";
+
+        return;
+
+    }
+
+
+    const fromRate =
+        currencyRates[
+            fromCurrency.value
+        ];
+
+
+    const toRate =
+        currencyRates[
+            toCurrency.value
+        ];
+
+
+    if (
+        !fromRate ||
+        !toRate
+    ) {
+
+        currencyResult.innerHTML =
+            "Currency unavailable.";
+
+        return;
+
+    }
+
+
+    const result =
+        (amount / fromRate) *
+        toRate;
+
+
+    currencyResult.innerHTML = `
+
+        <strong>
+            ${result.toLocaleString(
+                undefined,
+                {
+                    maximumFractionDigits: 2
+                }
+            )}
+            ${toCurrency.value}
+        </strong>
+
+        <span>
+            ${amount} ${fromCurrency.value}
+        </span>
+
+    `;
 
 }
 
@@ -511,15 +999,23 @@ function getBudgetProfile(budget) {
 
     };
 
-    return profiles[budget] || profiles.Standard;
+
+    return (
+        profiles[budget] ||
+        profiles.Standard
+    );
+
 }
 
 
 /* =========================================================
-   ACTIVITY GENERATOR
+   ACTIVITIES
    ========================================================= */
 
-function generateActivities(city, style) {
+function generateActivities(
+    city,
+    style
+) {
 
     const activities = {
 
@@ -567,10 +1063,12 @@ function generateActivities(city, style) {
 
     };
 
+
     return (
         activities[style] ||
         activities.Adventure
     );
+
 }
 
 
@@ -580,15 +1078,30 @@ function generateActivities(city, style) {
 
 function validatePlanner() {
 
-    if (!planDestination || !daysInput || !budgetInput) {
+    if (
+        !planDestination ||
+        !daysInput ||
+        !budgetInput
+    ) {
+
         return false;
+
     }
 
-    const city = planDestination.value.trim();
 
-    const days = Number(daysInput.value);
+    const city =
+        planDestination.value.trim();
 
-    const budget = budgetInput.value;
+
+    const days =
+        Number(
+            daysInput.value
+        );
+
+
+    const budget =
+        budgetInput.value;
+
 
     if (!city) {
 
@@ -599,7 +1112,9 @@ function validatePlanner() {
         planDestination.focus();
 
         return false;
+
     }
+
 
     if (
         !Number.isFinite(days) ||
@@ -614,7 +1129,9 @@ function validatePlanner() {
         daysInput.focus();
 
         return false;
+
     }
+
 
     if (!budget) {
 
@@ -625,9 +1142,12 @@ function validatePlanner() {
         budgetInput.focus();
 
         return false;
+
     }
 
+
     return true;
+
 }
 
 
@@ -643,18 +1163,25 @@ if (plannerForm) {
 
             event.preventDefault();
 
+
             if (!validatePlanner()) {
                 return;
             }
 
+
             const city =
                 planDestination.value.trim();
 
+
             const days =
-                Number(daysInput.value);
+                Number(
+                    daysInput.value
+                );
+
 
             const budget =
                 budgetInput.value;
+
 
             const style =
                 travelStyleInput
@@ -663,20 +1190,30 @@ if (plannerForm) {
 
 
             const profile =
-                getBudgetProfile(budget);
+                getBudgetProfile(
+                    budget
+                );
 
 
             const accommodation =
-                profile.accommodation * days;
+                profile.accommodation *
+                days;
+
 
             const food =
-                profile.food * days;
+                profile.food *
+                days;
+
 
             const transport =
-                profile.transport * days;
+                profile.transport *
+                days;
+
 
             const activitiesCost =
-                profile.activities * days;
+                profile.activities *
+                days;
+
 
             const totalBudget =
                 accommodation +
@@ -684,8 +1221,10 @@ if (plannerForm) {
                 transport +
                 activitiesCost;
 
+
             const dailyAverage =
-                totalBudget / days;
+                totalBudget /
+                days;
 
 
             const activities =
@@ -695,7 +1234,8 @@ if (plannerForm) {
                 );
 
 
-            let itineraryHTML = "";
+            let itineraryHTML =
+                "";
 
 
             for (
@@ -709,6 +1249,7 @@ if (plannerForm) {
                         (day - 1) %
                         activities.length
                     ];
+
 
                 itineraryHTML += `
 
@@ -733,6 +1274,7 @@ if (plannerForm) {
                     </div>
 
                 `;
+
             }
 
 
@@ -745,6 +1287,7 @@ if (plannerForm) {
                 <div class="result-header">
 
                     <div>
+
                         <span class="result-label">
                             YOUR TRIP PLAN
                         </span>
@@ -758,6 +1301,7 @@ if (plannerForm) {
                             ${style} Travel •
                             ${budget} Budget
                         </p>
+
                     </div>
 
                     <div class="result-icon">
@@ -773,41 +1317,58 @@ if (plannerForm) {
                         💰 Budget Analytics
                     </h3>
 
+
                     <div class="budget-row">
+
                         <span>
                             🏨 Accommodation
                         </span>
+
                         <strong>
                             $${accommodation}
                         </strong>
+
                     </div>
 
+
                     <div class="budget-row">
+
                         <span>
                             🍴 Food
                         </span>
+
                         <strong>
                             $${food}
                         </strong>
+
                     </div>
 
+
                     <div class="budget-row">
+
                         <span>
                             🚕 Transport
                         </span>
+
                         <strong>
                             $${transport}
                         </strong>
+
                     </div>
 
+
                     <div class="budget-row">
+
                         <span>
                             🎟️ Activities
                         </span>
+
                         <strong>
                             $${activitiesCost}
                         </strong>
+
                     </div>
+
 
                     <div class="budget-total">
 
@@ -821,9 +1382,11 @@ if (plannerForm) {
 
                     </div>
 
+
                     <div class="budget-average">
 
                         Average Per Day:
+
                         <strong>
                             $${dailyAverage.toFixed(2)}
                         </strong>
@@ -840,6 +1403,50 @@ if (plannerForm) {
                     </h3>
 
                     ${itineraryHTML}
+
+                </div>
+
+
+                <div class="live-data-container">
+
+                    <div class="live-data-header">
+
+                        <div>
+
+                            <span>
+                                LIVE TRAVEL DATA
+                            </span>
+
+                            <h3>
+                                ${city} Now
+                            </h3>
+
+                        </div>
+
+                        <div class="live-indicator">
+                            <span></span>
+                            LIVE
+                        </div>
+
+                    </div>
+
+
+                    <div
+                        id="weatherData"
+                        class="weather-data"
+                    >
+
+                        <div class="live-loading">
+
+                            <div class="loading-spinner"></div>
+
+                            <p>
+                                Loading live weather...
+                            </p>
+
+                        </div>
+
+                    </div>
 
                 </div>
 
@@ -885,6 +1492,9 @@ if (plannerForm) {
             );
 
 
+            loadWeather(city);
+
+
             plannerResult.scrollIntoView({
                 behavior: "smooth",
                 block: "start"
@@ -897,7 +1507,7 @@ if (plannerForm) {
 
 
 /* =========================================================
-   COPY TRIP PLAN
+   COPY
    ========================================================= */
 
 function copyTripPlan() {
@@ -906,11 +1516,11 @@ function copyTripPlan() {
         return;
     }
 
-    const text =
-        plannerResult.innerText;
 
     navigator.clipboard
-        .writeText(text)
+        .writeText(
+            plannerResult.innerText
+        )
         .then(() => {
 
             alert(
@@ -925,11 +1535,12 @@ function copyTripPlan() {
             );
 
         });
+
 }
 
 
 /* =========================================================
-   PRINT TRIP PLAN
+   PRINT
    ========================================================= */
 
 function printTripPlan() {
@@ -938,11 +1549,13 @@ function printTripPlan() {
         return;
     }
 
+
     const printWindow =
         window.open(
             "",
             "_blank"
         );
+
 
     if (!printWindow) {
 
@@ -951,6 +1564,7 @@ function printTripPlan() {
         );
 
         return;
+
     }
 
 
@@ -994,10 +1608,6 @@ function printTripPlan() {
                     border-bottom: 1px solid #ddd;
                 }
 
-                .day-number {
-                    font-weight: bold;
-                }
-
                 button {
                     display: none;
                 }
@@ -1020,20 +1630,23 @@ function printTripPlan() {
 
     `);
 
+
     printWindow.document.close();
 
     printWindow.focus();
+
 
     setTimeout(() => {
 
         printWindow.print();
 
     }, 500);
+
 }
 
 
 /* =========================================================
-   RESET PLANNER
+   RESET
    ========================================================= */
 
 function resetPlanner() {
@@ -1041,6 +1654,7 @@ function resetPlanner() {
     if (plannerForm) {
         plannerForm.reset();
     }
+
 
     if (plannerResult) {
 
@@ -1052,6 +1666,7 @@ function resetPlanner() {
 
     }
 
+
     if (planner) {
 
         planner.scrollIntoView({
@@ -1060,6 +1675,7 @@ function resetPlanner() {
         });
 
     }
+
 }
 
 
@@ -1068,6 +1684,31 @@ if (resetBtn) {
     resetBtn.addEventListener(
         "click",
         resetPlanner
+    );
+
+}
+
+
+/* =========================================================
+   EXPLORE BUTTON
+   ========================================================= */
+
+if (exploreBtn) {
+
+    exploreBtn.addEventListener(
+        "click",
+        () => {
+
+            if (planner) {
+
+                planner.scrollIntoView({
+                    behavior: "smooth",
+                    block: "start"
+                });
+
+            }
+
+        }
     );
 
 }
@@ -1084,11 +1725,10 @@ function initializeTravelSphere() {
 }
 
 
-/* =========================================================
-   DOM READY
-   ========================================================= */
-
-if (document.readyState === "loading") {
+if (
+    document.readyState ===
+    "loading"
+) {
 
     document.addEventListener(
         "DOMContentLoaded",
