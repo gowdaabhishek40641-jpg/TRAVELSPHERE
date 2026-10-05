@@ -1,6 +1,6 @@
 /* =========================================================
    TRAVELSPHERE — SMART TRAVEL PLANNER
-   COMMIT 10 — LIVE TRAVEL DATA
+   COMMIT 11 — SAVED TRIPS
    ========================================================= */
 
 
@@ -9,21 +9,44 @@
    ========================================================= */
 
 const exploreBtn = document.getElementById("exploreBtn");
-const destinationInput = document.getElementById("destinationInput");
-const planner = document.getElementById("planner");
+const destinationInput =
+    document.getElementById("destinationInput");
 
-const planDestination = document.getElementById("planDestination");
-const plannerForm = document.getElementById("plannerForm");
-const daysInput = document.getElementById("days");
-const budgetInput = document.getElementById("budget");
-const travelStyleInput = document.getElementById("travelStyle");
+const planner =
+    document.getElementById("planner");
 
-const plannerResult = document.getElementById("plannerResult");
-const resetBtn = document.getElementById("resetBtn");
+const planDestination =
+    document.getElementById("planDestination");
+
+const plannerForm =
+    document.getElementById("plannerForm");
+
+const daysInput =
+    document.getElementById("days");
+
+const budgetInput =
+    document.getElementById("budget");
+
+const travelStyleInput =
+    document.getElementById("travelStyle");
+
+const plannerResult =
+    document.getElementById("plannerResult");
+
+const resetBtn =
+    document.getElementById("resetBtn");
 
 
 /* =========================================================
-   DESTINATION DATABASE
+   STORAGE
+   ========================================================= */
+
+const SAVED_TRIPS_KEY =
+    "travelsphere_saved_trips";
+
+
+/* =========================================================
+   DESTINATION DATA
    ========================================================= */
 
 const destinationData = {
@@ -167,24 +190,75 @@ const destinationData = {
 
 
 /* =========================================================
-   CURRENCY DATABASE
+   CURRENCY
    ========================================================= */
 
 const currencyRates = {
 
     INR: 1,
-
     USD: 0.0119,
-
     AED: 0.0437,
-
     EUR: 0.0102,
-
     JPY: 1.76,
-
     CHF: 0.0094
 
 };
+
+
+/* =========================================================
+   STORAGE FUNCTIONS
+   ========================================================= */
+
+function getSavedTrips() {
+
+    try {
+
+        const trips =
+            localStorage.getItem(
+                SAVED_TRIPS_KEY
+            );
+
+        return trips
+            ? JSON.parse(trips)
+            : [];
+
+    } catch (error) {
+
+        console.error(
+            "Unable to read saved trips:",
+            error
+        );
+
+        return [];
+
+    }
+
+}
+
+
+function saveTripsToStorage(trips) {
+
+    try {
+
+        localStorage.setItem(
+            SAVED_TRIPS_KEY,
+            JSON.stringify(trips)
+        );
+
+        return true;
+
+    } catch (error) {
+
+        console.error(
+            "Unable to save trips:",
+            error
+        );
+
+        return false;
+
+    }
+
+}
 
 
 /* =========================================================
@@ -193,11 +267,13 @@ const currencyRates = {
 
 function selectDestination(city) {
 
-    if (!destinationInput || !planDestination) {
+    if (!planDestination) {
         return;
     }
 
-    destinationInput.value = city;
+    if (destinationInput) {
+        destinationInput.value = city;
+    }
 
     planDestination.value = city;
 
@@ -209,6 +285,7 @@ function selectDestination(city) {
         });
 
     }
+
 }
 
 
@@ -246,7 +323,6 @@ function showDestinationDetails(city) {
             >
                 ×
             </button>
-
 
             <div class="destination-modal-header">
 
@@ -374,20 +450,17 @@ function showDestinationDetails(city) {
 
     `;
 
-
     document.body.appendChild(modal);
 
     document.body.classList.add(
         "modal-open"
     );
 
-
     requestAnimationFrame(() => {
 
         modal.classList.add("active");
 
     });
-
 
     modal.addEventListener(
         "click",
@@ -403,7 +476,6 @@ function showDestinationDetails(city) {
 
         }
     );
-
 
     document.addEventListener(
         "keydown",
@@ -424,9 +496,7 @@ function closeDestinationDetails() {
         return;
     }
 
-    modal.classList.remove(
-        "active"
-    );
+    modal.classList.remove("active");
 
     setTimeout(() => {
 
@@ -438,7 +508,6 @@ function closeDestinationDetails() {
 
     }, 250);
 
-
     document.removeEventListener(
         "keydown",
         handleDestinationEscape
@@ -449,12 +518,8 @@ function closeDestinationDetails() {
 
 function handleDestinationEscape(event) {
 
-    if (
-        event.key === "Escape"
-    ) {
-
+    if (event.key === "Escape") {
         closeDestinationDetails();
-
     }
 
 }
@@ -484,28 +549,21 @@ function initializeDestinationDetails() {
             ".destination-card"
         );
 
-
     cards.forEach(card => {
 
         const heading =
             card.querySelector("h3");
 
-
         if (!heading) {
             return;
         }
 
-
         const city =
             heading.textContent.trim();
 
-
-        if (
-            !destinationData[city]
-        ) {
+        if (!destinationData[city]) {
             return;
         }
-
 
         if (
             card.querySelector(
@@ -515,24 +573,19 @@ function initializeDestinationDetails() {
             return;
         }
 
-
         const button =
             document.createElement(
                 "button"
             );
 
-
         button.className =
             "destination-details-btn";
-
 
         button.type =
             "button";
 
-
         button.innerHTML =
             "Explore Details →";
-
 
         button.addEventListener(
             "click",
@@ -549,7 +602,6 @@ function initializeDestinationDetails() {
             }
         );
 
-
         card.appendChild(button);
 
     });
@@ -558,7 +610,7 @@ function initializeDestinationDetails() {
 
 
 /* =========================================================
-   LIVE WEATHER
+   WEATHER
    ========================================================= */
 
 async function loadWeather(city) {
@@ -566,28 +618,17 @@ async function loadWeather(city) {
     const destination =
         destinationData[city];
 
-
-    if (!destination) {
-
-        showWeatherError(
-            "Weather information is unavailable for this destination."
-        );
-
-        return;
-
-    }
-
-
     const weatherCard =
         document.getElementById(
             "weatherData"
         );
 
-
-    if (!weatherCard) {
+    if (
+        !destination ||
+        !weatherCard
+    ) {
         return;
     }
-
 
     weatherCard.innerHTML = `
 
@@ -603,7 +644,6 @@ async function loadWeather(city) {
 
     `;
 
-
     try {
 
         const url =
@@ -613,33 +653,25 @@ async function loadWeather(city) {
             `&current=temperature_2m,relative_humidity_2m,weather_code,wind_speed_10m` +
             `&timezone=auto`;
 
-
         const response =
             await fetch(url);
 
-
         if (!response.ok) {
-
             throw new Error(
                 "Weather API request failed"
             );
-
         }
-
 
         const data =
             await response.json();
 
-
         const current =
             data.current;
-
 
         const weatherText =
             getWeatherDescription(
                 current.weather_code
             );
-
 
         weatherCard.innerHTML = `
 
@@ -713,18 +745,15 @@ async function loadWeather(city) {
 
         `;
 
-    }
-
-    catch (error) {
+    } catch (error) {
 
         console.error(
             "Weather error:",
             error
         );
 
-
         showWeatherError(
-            "Unable to load live weather. Please try again."
+            "Unable to load live weather."
         );
 
     }
@@ -732,58 +761,33 @@ async function loadWeather(city) {
 }
 
 
-/* =========================================================
-   WEATHER DESCRIPTION
-   ========================================================= */
-
 function getWeatherDescription(code) {
 
     const weatherCodes = {
 
         0: "☀️ Clear Sky",
-
         1: "🌤️ Mainly Clear",
-
         2: "⛅ Partly Cloudy",
-
         3: "☁️ Overcast",
-
         45: "🌫️ Foggy",
-
         48: "🌫️ Rime Fog",
-
         51: "🌦️ Light Drizzle",
-
         53: "🌦️ Drizzle",
-
         55: "🌧️ Heavy Drizzle",
-
         61: "🌦️ Light Rain",
-
         63: "🌧️ Rain",
-
         65: "🌧️ Heavy Rain",
-
         71: "🌨️ Light Snow",
-
         73: "❄️ Snow",
-
         75: "❄️ Heavy Snow",
-
         80: "🌦️ Rain Showers",
-
         81: "🌧️ Rain Showers",
-
         82: "⛈️ Heavy Showers",
-
         95: "⛈️ Thunderstorm",
-
         96: "⛈️ Thunderstorm + Hail",
-
         99: "⛈️ Heavy Thunderstorm"
 
     };
-
 
     return (
         weatherCodes[code] ||
@@ -793,10 +797,6 @@ function getWeatherDescription(code) {
 }
 
 
-/* =========================================================
-   WEATHER ERROR
-   ========================================================= */
-
 function showWeatherError(message) {
 
     const weatherCard =
@@ -804,19 +804,15 @@ function showWeatherError(message) {
             "weatherData"
         );
 
-
     if (!weatherCard) {
         return;
     }
-
 
     weatherCard.innerHTML = `
 
         <div class="live-error">
 
-            <span>
-                ⚠️
-            </span>
+            <span>⚠️</span>
 
             <p>
                 ${message}
@@ -835,10 +831,6 @@ function showWeatherError(message) {
 }
 
 
-/* =========================================================
-   WEATHER FROM PLANNER
-   ========================================================= */
-
 function loadWeatherFromPlanner() {
 
     const city =
@@ -846,11 +838,7 @@ function loadWeatherFromPlanner() {
             ? planDestination.value
             : "";
 
-
-    if (
-        city &&
-        destinationData[city]
-    ) {
+    if (destinationData[city]) {
 
         loadWeather(city);
 
@@ -880,77 +868,67 @@ function convertCurrency() {
             "toCurrency"
         );
 
-    const currencyResult =
+    const result =
         document.getElementById(
             "currencyResult"
         );
-
 
     if (
         !amountInput ||
         !fromCurrency ||
         !toCurrency ||
-        !currencyResult
+        !result
     ) {
-
         return;
-
     }
-
 
     const amount =
         Number(
             amountInput.value
         );
 
-
     if (
         !Number.isFinite(amount) ||
         amount < 0
     ) {
 
-        currencyResult.innerHTML =
+        result.innerHTML =
             "Enter a valid amount.";
 
         return;
 
     }
 
-
     const fromRate =
         currencyRates[
             fromCurrency.value
         ];
-
 
     const toRate =
         currencyRates[
             toCurrency.value
         ];
 
-
     if (
         !fromRate ||
         !toRate
     ) {
 
-        currencyResult.innerHTML =
+        result.innerHTML =
             "Currency unavailable.";
 
         return;
 
     }
 
-
-    const result =
+    const converted =
         (amount / fromRate) *
         toRate;
 
-
-    currencyResult.innerHTML = `
+    result.innerHTML = `
 
         <strong>
-            ${result.toLocaleString(
+            ${converted.toLocaleString(
                 undefined,
                 {
                     maximumFractionDigits: 2
@@ -960,7 +938,8 @@ function convertCurrency() {
         </strong>
 
         <span>
-            ${amount} ${fromCurrency.value}
+            ${amount}
+            ${fromCurrency.value}
         </span>
 
     `;
@@ -998,7 +977,6 @@ function getBudgetProfile(budget) {
         }
 
     };
-
 
     return (
         profiles[budget] ||
@@ -1054,7 +1032,7 @@ function generateActivities(
             "Explore the city at your own pace"
         ],
 
-        "Honeymoon": [
+        Honeymoon: [
             "Enjoy a romantic city walk",
             "Have a special dinner",
             "Visit a scenic attraction",
@@ -1062,7 +1040,6 @@ function generateActivities(
         ]
 
     };
-
 
     return (
         activities[style] ||
@@ -1083,25 +1060,17 @@ function validatePlanner() {
         !daysInput ||
         !budgetInput
     ) {
-
         return false;
-
     }
-
 
     const city =
         planDestination.value.trim();
 
-
     const days =
-        Number(
-            daysInput.value
-        );
-
+        Number(daysInput.value);
 
     const budget =
         budgetInput.value;
-
 
     if (!city) {
 
@@ -1114,7 +1083,6 @@ function validatePlanner() {
         return false;
 
     }
-
 
     if (
         !Number.isFinite(days) ||
@@ -1132,7 +1100,6 @@ function validatePlanner() {
 
     }
 
-
     if (!budget) {
 
         alert(
@@ -1144,7 +1111,6 @@ function validatePlanner() {
         return false;
 
     }
-
 
     return true;
 
@@ -1163,57 +1129,38 @@ if (plannerForm) {
 
             event.preventDefault();
 
-
             if (!validatePlanner()) {
                 return;
             }
 
-
             const city =
                 planDestination.value.trim();
 
-
             const days =
-                Number(
-                    daysInput.value
-                );
-
+                Number(daysInput.value);
 
             const budget =
                 budgetInput.value;
-
 
             const style =
                 travelStyleInput
                     ? travelStyleInput.value
                     : "Adventure";
 
-
             const profile =
-                getBudgetProfile(
-                    budget
-                );
-
+                getBudgetProfile(budget);
 
             const accommodation =
-                profile.accommodation *
-                days;
-
+                profile.accommodation * days;
 
             const food =
-                profile.food *
-                days;
-
+                profile.food * days;
 
             const transport =
-                profile.transport *
-                days;
-
+                profile.transport * days;
 
             const activitiesCost =
-                profile.activities *
-                days;
-
+                profile.activities * days;
 
             const totalBudget =
                 accommodation +
@@ -1221,11 +1168,8 @@ if (plannerForm) {
                 transport +
                 activitiesCost;
 
-
             const dailyAverage =
-                totalBudget /
-                days;
-
+                totalBudget / days;
 
             const activities =
                 generateActivities(
@@ -1233,10 +1177,7 @@ if (plannerForm) {
                     style
                 );
 
-
-            let itineraryHTML =
-                "";
-
+            let itineraryHTML = "";
 
             for (
                 let day = 1;
@@ -1249,7 +1190,6 @@ if (plannerForm) {
                         (day - 1) %
                         activities.length
                     ];
-
 
                 itineraryHTML += `
 
@@ -1277,10 +1217,8 @@ if (plannerForm) {
 
             }
 
-
             const generatedTime =
                 new Date().toLocaleString();
-
 
             plannerResult.innerHTML = `
 
@@ -1317,80 +1255,56 @@ if (plannerForm) {
                         💰 Budget Analytics
                     </h3>
 
-
                     <div class="budget-row">
-
                         <span>
                             🏨 Accommodation
                         </span>
-
                         <strong>
                             $${accommodation}
                         </strong>
-
                     </div>
 
-
                     <div class="budget-row">
-
                         <span>
                             🍴 Food
                         </span>
-
                         <strong>
                             $${food}
                         </strong>
-
                     </div>
 
-
                     <div class="budget-row">
-
                         <span>
                             🚕 Transport
                         </span>
-
                         <strong>
                             $${transport}
                         </strong>
-
                     </div>
 
-
                     <div class="budget-row">
-
                         <span>
                             🎟️ Activities
                         </span>
-
                         <strong>
                             $${activitiesCost}
                         </strong>
-
                     </div>
 
-
                     <div class="budget-total">
-
                         <span>
                             Total Estimated Budget
                         </span>
-
                         <strong>
                             $${totalBudget}
                         </strong>
-
                     </div>
 
-
                     <div class="budget-average">
-
                         Average Per Day:
-
                         <strong>
                             $${dailyAverage.toFixed(2)}
                         </strong>
-
                     </div>
 
                 </div>
@@ -1424,8 +1338,11 @@ if (plannerForm) {
                         </div>
 
                         <div class="live-indicator">
+
                             <span></span>
+
                             LIVE
+
                         </div>
 
                     </div>
@@ -1447,6 +1364,26 @@ if (plannerForm) {
                         </div>
 
                     </div>
+
+                </div>
+
+
+                <!-- SAVE TRIP BUTTON -->
+
+                <div class="save-trip-area">
+
+                    <button
+                        type="button"
+                        class="save-trip-btn"
+                        onclick="saveCurrentTrip()"
+                    >
+                        💾 Save This Trip
+                    </button>
+
+                    <p
+                        id="saveTripMessage"
+                        class="save-trip-message"
+                    ></p>
 
                 </div>
 
@@ -1507,7 +1444,664 @@ if (plannerForm) {
 
 
 /* =========================================================
-   COPY
+   SAVE CURRENT TRIP
+   ========================================================= */
+
+function saveCurrentTrip() {
+
+    if (
+        !planDestination ||
+        !daysInput ||
+        !budgetInput
+    ) {
+        return;
+    }
+
+    const city =
+        planDestination.value.trim();
+
+    const days =
+        Number(daysInput.value);
+
+    const budget =
+        budgetInput.value;
+
+    const style =
+        travelStyleInput
+            ? travelStyleInput.value
+            : "Adventure";
+
+
+    if (
+        !city ||
+        !days ||
+        !budget
+    ) {
+
+        alert(
+            "Generate a trip before saving it."
+        );
+
+        return;
+
+    }
+
+
+    const profile =
+        getBudgetProfile(
+            budget
+        );
+
+
+    const totalBudget =
+        (
+            profile.accommodation +
+            profile.food +
+            profile.transport +
+            profile.activities
+        ) * days;
+
+
+    const trip = {
+
+        id:
+            Date.now(),
+
+        destination:
+            city,
+
+        days:
+            days,
+
+        budget:
+            budget,
+
+        style:
+            style,
+
+        totalBudget:
+            totalBudget,
+
+        savedAt:
+            new Date().toLocaleString()
+
+    };
+
+
+    const trips =
+        getSavedTrips();
+
+
+    const alreadySaved =
+        trips.some(
+            savedTrip =>
+                savedTrip.destination === city &&
+                savedTrip.days === days &&
+                savedTrip.budget === budget &&
+                savedTrip.style === style
+        );
+
+
+    if (alreadySaved) {
+
+        showSaveMessage(
+            "This trip is already saved."
+        );
+
+        return;
+
+    }
+
+
+    trips.unshift(trip);
+
+
+    const success =
+        saveTripsToStorage(trips);
+
+
+    if (success) {
+
+        showSaveMessage(
+            "Trip saved successfully! 💾"
+        );
+
+        renderSavedTrips();
+
+    } else {
+
+        showSaveMessage(
+            "Unable to save this trip."
+        );
+
+    }
+
+}
+
+
+/* =========================================================
+   SAVE MESSAGE
+   ========================================================= */
+
+function showSaveMessage(message) {
+
+    const messageBox =
+        document.getElementById(
+            "saveTripMessage"
+        );
+
+    if (!messageBox) {
+        return;
+    }
+
+    messageBox.textContent =
+        message;
+
+    messageBox.classList.add(
+        "show"
+    );
+
+
+    setTimeout(() => {
+
+        messageBox.classList.remove(
+            "show"
+        );
+
+    }, 2500);
+
+}
+
+
+/* =========================================================
+   SAVED TRIPS MODAL
+   ========================================================= */
+
+function openSavedTrips() {
+
+    renderSavedTrips();
+
+    const modal =
+        document.getElementById(
+            "savedTripsModal"
+        );
+
+    if (!modal) {
+        return;
+    }
+
+    modal.classList.add(
+        "active"
+    );
+
+    document.body.classList.add(
+        "modal-open"
+    );
+
+}
+
+
+/* =========================================================
+   CLOSE SAVED TRIPS
+   ========================================================= */
+
+function closeSavedTrips() {
+
+    const modal =
+        document.getElementById(
+            "savedTripsModal"
+        );
+
+    if (!modal) {
+        return;
+    }
+
+    modal.classList.remove(
+        "active"
+    );
+
+    document.body.classList.remove(
+        "modal-open"
+    );
+
+}
+
+
+/* =========================================================
+   RENDER SAVED TRIPS
+   ========================================================= */
+
+function renderSavedTrips() {
+
+    const container =
+        document.getElementById(
+            "savedTripsList"
+        );
+
+    const count =
+        document.getElementById(
+            "savedTripsCount"
+        );
+
+
+    if (!container) {
+        return;
+    }
+
+
+    const trips =
+        getSavedTrips();
+
+
+    if (count) {
+
+        count.textContent =
+            trips.length;
+
+    }
+
+
+    if (trips.length === 0) {
+
+        container.innerHTML = `
+
+            <div class="empty-saved-trips">
+
+                <div>
+                    🧳
+                </div>
+
+                <h3>
+                    No Saved Trips Yet
+                </h3>
+
+                <p>
+                    Generate a trip and save it here.
+                </p>
+
+            </div>
+
+        `;
+
+        return;
+
+    }
+
+
+    container.innerHTML =
+        trips.map(
+            trip => `
+
+                <div
+                    class="saved-trip-card"
+                    data-trip-id="${trip.id}"
+                >
+
+                    <div class="saved-trip-icon">
+
+                        ${
+                            destinationData[
+                                trip.destination
+                            ]
+                                ? destinationData[
+                                    trip.destination
+                                ].emoji
+                                : "✈️"
+                        }
+
+                    </div>
+
+
+                    <div class="saved-trip-info">
+
+                        <h3>
+                            ${trip.destination}
+                        </h3>
+
+                        <p>
+                            ${trip.days} Days •
+                            ${trip.style}
+                        </p>
+
+                        <span>
+                            ${trip.budget} Budget
+                            •
+                            $${trip.totalBudget}
+                        </span>
+
+                        <small>
+                            Saved ${trip.savedAt}
+                        </small>
+
+                    </div>
+
+
+                    <div class="saved-trip-actions">
+
+                        <button
+                            type="button"
+                            onclick="loadSavedTrip(${trip.id})"
+                        >
+                            Open
+                        </button>
+
+                        <button
+                            type="button"
+                            class="delete-trip-btn"
+                            onclick="deleteSavedTrip(${trip.id})"
+                        >
+                            🗑️
+                        </button>
+
+                    </div>
+
+                </div>
+
+            `
+        ).join("");
+
+}
+
+
+/* =========================================================
+   LOAD SAVED TRIP
+   ========================================================= */
+
+function loadSavedTrip(id) {
+
+    const trips =
+        getSavedTrips();
+
+    const trip =
+        trips.find(
+            savedTrip =>
+                savedTrip.id === id
+        );
+
+
+    if (!trip) {
+        return;
+    }
+
+
+    closeSavedTrips();
+
+
+    if (planDestination) {
+        planDestination.value =
+            trip.destination;
+    }
+
+
+    if (destinationInput) {
+        destinationInput.value =
+            trip.destination;
+    }
+
+
+    if (daysInput) {
+        daysInput.value =
+            trip.days;
+    }
+
+
+    if (budgetInput) {
+        budgetInput.value =
+            trip.budget;
+    }
+
+
+    if (travelStyleInput) {
+        travelStyleInput.value =
+            trip.style;
+    }
+
+
+    if (planner) {
+
+        planner.scrollIntoView({
+            behavior: "smooth",
+            block: "start"
+        });
+
+    }
+
+
+    setTimeout(() => {
+
+        if (plannerForm) {
+
+            plannerForm.dispatchEvent(
+                new Event("submit", {
+                    cancelable: true
+                })
+            );
+
+        }
+
+    }, 600);
+
+}
+
+
+/* =========================================================
+   DELETE SAVED TRIP
+   ========================================================= */
+
+function deleteSavedTrip(id) {
+
+    const confirmed =
+        confirm(
+            "Delete this saved trip?"
+        );
+
+
+    if (!confirmed) {
+        return;
+    }
+
+
+    const trips =
+        getSavedTrips();
+
+
+    const updatedTrips =
+        trips.filter(
+            trip =>
+                trip.id !== id
+        );
+
+
+    saveTripsToStorage(
+        updatedTrips
+    );
+
+
+    renderSavedTrips();
+
+}
+
+
+/* =========================================================
+   CLEAR ALL SAVED TRIPS
+   ========================================================= */
+
+function clearSavedTrips() {
+
+    const trips =
+        getSavedTrips();
+
+
+    if (trips.length === 0) {
+        return;
+    }
+
+
+    const confirmed =
+        confirm(
+            "Delete all saved trips?"
+        );
+
+
+    if (!confirmed) {
+        return;
+    }
+
+
+    localStorage.removeItem(
+        SAVED_TRIPS_KEY
+    );
+
+
+    renderSavedTrips();
+
+}
+
+
+/* =========================================================
+   SAVED TRIPS UI
+   ========================================================= */
+
+function initializeSavedTripsUI() {
+
+    if (
+        document.getElementById(
+            "savedTripsModal"
+        )
+    ) {
+        return;
+    }
+
+
+    const wrapper =
+        document.createElement(
+            "div"
+        );
+
+
+    wrapper.innerHTML = `
+
+        <button
+            type="button"
+            class="saved-trips-floating-btn"
+            onclick="openSavedTrips()"
+        >
+
+            💾
+            <span>
+                Saved Trips
+            </span>
+
+            <b id="savedTripsCount">
+                0
+            </b>
+
+        </button>
+
+
+        <div
+            id="savedTripsModal"
+            class="saved-trips-modal"
+        >
+
+            <div
+                class="saved-trips-modal-card"
+            >
+
+                <div
+                    class="saved-trips-header"
+                >
+
+                    <div>
+
+                        <span>
+                            TRAVELSPHERE
+                        </span>
+
+                        <h2>
+                            Saved Trips
+                        </h2>
+
+                    </div>
+
+
+                    <button
+                        type="button"
+                        class="saved-trips-close"
+                        onclick="closeSavedTrips()"
+                    >
+                        ×
+                    </button>
+
+                </div>
+
+
+                <div
+                    id="savedTripsList"
+                    class="saved-trips-list"
+                >
+                </div>
+
+
+                <div
+                    class="saved-trips-footer"
+                >
+
+                    <button
+                        type="button"
+                        class="clear-saved-btn"
+                        onclick="clearSavedTrips()"
+                    >
+                        🗑️ Clear All
+                    </button>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    `;
+
+
+    document.body.appendChild(
+        wrapper
+    );
+
+
+    renderSavedTrips();
+
+
+    const modal =
+        document.getElementById(
+            "savedTripsModal"
+        );
+
+
+    if (modal) {
+
+        modal.addEventListener(
+            "click",
+            event => {
+
+                if (
+                    event.target === modal
+                ) {
+
+                    closeSavedTrips();
+
+                }
+
+            }
+        );
+
+    }
+
+}
+
+
+/* =========================================================
+   COPY TRIP
    ========================================================= */
 
 function copyTripPlan() {
@@ -1584,13 +2178,6 @@ function printTripPlan() {
                     font-family: Arial, sans-serif;
                     padding: 40px;
                     line-height: 1.6;
-                }
-
-                h1,
-                h2,
-                h3,
-                h4 {
-                    color: #222;
                 }
 
                 .budget-row,
@@ -1679,48 +2266,15 @@ function resetPlanner() {
 }
 
 
-if (resetBtn) {
-
-    resetBtn.addEventListener(
-        "click",
-        resetPlanner
-    );
-
-}
-
-
 /* =========================================================
-   EXPLORE BUTTON
-   ========================================================= */
-
-if (exploreBtn) {
-
-    exploreBtn.addEventListener(
-        "click",
-        () => {
-
-            if (planner) {
-
-                planner.scrollIntoView({
-                    behavior: "smooth",
-                    block: "start"
-                });
-
-            }
-
-        }
-    );
-
-}
-
-
-/* =========================================================
-   INITIALIZE
+   INITIALIZATION
    ========================================================= */
 
 function initializeTravelSphere() {
 
     initializeDestinationDetails();
+
+    initializeSavedTripsUI();
 
 }
 
