@@ -2294,3 +2294,256 @@ if (
     initializeTravelSphere();
 
 }
+/* =========================================================
+   COMMIT 13
+   INTERACTIVE UI EXPERIENCE
+========================================================= */
+
+document.addEventListener("DOMContentLoaded", () => {
+
+    /* -----------------------------------------------------
+       SCROLL REVEAL
+    ----------------------------------------------------- */
+
+    const revealItems = document.querySelectorAll(
+        ".section-title, .destination-card, .planner-form, .planner-result"
+    );
+
+    revealItems.forEach((item) => {
+        item.classList.add("reveal-item");
+    });
+
+    const revealObserver = new IntersectionObserver(
+        (entries) => {
+            entries.forEach((entry) => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add("reveal-visible");
+                    revealObserver.unobserve(entry.target);
+                }
+            });
+        },
+        {
+            threshold: 0.12
+        }
+    );
+
+    revealItems.forEach((item) => {
+        revealObserver.observe(item);
+    });
+
+
+    /* -----------------------------------------------------
+       3D DESTINATION CARD TILT
+    ----------------------------------------------------- */
+
+    const cards = document.querySelectorAll(".destination-card");
+
+    cards.forEach((card) => {
+
+        card.addEventListener("mousemove", (event) => {
+
+            if (window.innerWidth < 800) return;
+
+            const rect = card.getBoundingClientRect();
+
+            const x =
+                event.clientX - rect.left;
+
+            const y =
+                event.clientY - rect.top;
+
+            const centerX =
+                rect.width / 2;
+
+            const centerY =
+                rect.height / 2;
+
+            const rotateX =
+                ((y - centerY) / centerY) * -4;
+
+            const rotateY =
+                ((x - centerX) / centerX) * 4;
+
+            card.style.transform =
+                `perspective(900px)
+                 rotateX(${rotateX}deg)
+                 rotateY(${rotateY}deg)
+                 translateY(-10px)`;
+        });
+
+        card.addEventListener("mouseleave", () => {
+
+            card.style.transform =
+                "";
+        });
+    });
+
+
+    /* -----------------------------------------------------
+       ANIMATED COUNTERS
+    ----------------------------------------------------- */
+
+    const counters =
+        document.querySelectorAll(
+            ".hero-stats strong"
+        );
+
+    const animateCounter = (element) => {
+
+        const originalText =
+            element.textContent.trim();
+
+        const match =
+            originalText.match(/\d+/);
+
+        if (!match) return;
+
+        const target =
+            parseInt(match[0], 10);
+
+        let current = 0;
+
+        const duration = 1200;
+
+        const start =
+            performance.now();
+
+        const update = (time) => {
+
+            const progress =
+                Math.min(
+                    (time - start) / duration,
+                    1
+                );
+
+            const eased =
+                1 - Math.pow(
+                    1 - progress,
+                    3
+                );
+
+            current =
+                Math.floor(
+                    target * eased
+                );
+
+            element.textContent =
+                originalText.replace(
+                    /\d+/,
+                    current
+                );
+
+            if (progress < 1) {
+                requestAnimationFrame(update);
+            }
+        };
+
+        requestAnimationFrame(update);
+    };
+
+
+    const counterObserver =
+        new IntersectionObserver(
+            (entries) => {
+
+                entries.forEach((entry) => {
+
+                    if (entry.isIntersecting) {
+
+                        animateCounter(
+                            entry.target
+                        );
+
+                        counterObserver.unobserve(
+                            entry.target
+                        );
+                    }
+                });
+
+            },
+            {
+                threshold: 0.8
+            }
+        );
+
+
+    counters.forEach((counter) => {
+        counterObserver.observe(counter);
+    });
+
+
+    /* -----------------------------------------------------
+       HERO PARALLAX
+    ----------------------------------------------------- */
+
+    const hero =
+        document.querySelector(".hero");
+
+    const earth =
+        document.querySelector(".earth");
+
+    if (hero && earth) {
+
+        hero.addEventListener(
+            "mousemove",
+            (event) => {
+
+                if (window.innerWidth < 900)
+                    return;
+
+                const x =
+                    (event.clientX /
+                        window.innerWidth -
+                        0.5);
+
+                const y =
+                    (event.clientY /
+                        window.innerHeight -
+                        0.5);
+
+                earth.style.transform =
+                    `translate(
+                        ${x * 18}px,
+                        ${y * 18}px
+                    )`;
+            }
+        );
+
+        hero.addEventListener(
+            "mouseleave",
+            () => {
+                earth.style.transform = "";
+            }
+        );
+    }
+
+
+    /* -----------------------------------------------------
+       BUTTON RIPPLE
+    ----------------------------------------------------- */
+
+    const buttons =
+        document.querySelectorAll(
+            "button"
+        );
+
+    buttons.forEach((button) => {
+
+        button.addEventListener(
+            "click",
+            () => {
+
+                button.classList.remove(
+                    "button-clicked"
+                );
+
+                void button.offsetWidth;
+
+                button.classList.add(
+                    "button-clicked"
+                );
+            }
+        );
+    });
+
+});

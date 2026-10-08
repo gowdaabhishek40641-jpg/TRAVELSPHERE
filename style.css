@@ -2368,4 +2368,275 @@ footer p {
         font-size: 25px;
     }
 }
+/* =========================================================
+   COMMIT 13
+   INTERACTIVE MOTION SYSTEM
+========================================================= */
+
+/* ---------------------------------------------------------
+   SCROLL REVEAL
+--------------------------------------------------------- */
+
+.reveal-item {
+    opacity: 0;
+
+    transform:
+        translateY(45px);
+
+    transition:
+        opacity 0.8s ease,
+        transform 0.8s
+        cubic-bezier(
+            0.2,
+            0.8,
+            0.2,
+            1
+        );
+}
+
+.reveal-visible {
+    opacity: 1;
+
+    transform:
+        translateY(0);
+}
+
+
+/* ---------------------------------------------------------
+   STAGGER DESTINATION CARDS
+--------------------------------------------------------- */
+
+.destination-card:nth-child(1) {
+    transition-delay: 0.05s;
+}
+
+.destination-card:nth-child(2) {
+    transition-delay: 0.12s;
+}
+
+.destination-card:nth-child(3) {
+    transition-delay: 0.19s;
+}
+
+.destination-card:nth-child(4) {
+    transition-delay: 0.26s;
+}
+
+
+/* ---------------------------------------------------------
+   3D CARD GLOW
+--------------------------------------------------------- */
+
+.destination-card {
+    will-change:
+        transform;
+
+    transform-style:
+        preserve-3d;
+}
+
+.destination-card::after {
+    content: "";
+
+    position: absolute;
+
+    inset: -1px;
+
+    border-radius: inherit;
+
+    pointer-events: none;
+
+    background:
+        radial-gradient(
+            circle at 50% 0%,
+            rgba(
+                56,
+                167,
+                255,
+                0.16
+            ),
+            transparent 45%
+        );
+
+    opacity: 0;
+
+    transition:
+        opacity 0.35s ease;
+}
+
+.destination-card:hover::after {
+    opacity: 1;
+}
+
+
+/* ---------------------------------------------------------
+   BUTTON PRESS EFFECT
+--------------------------------------------------------- */
+
+button {
+    -webkit-tap-highlight-color:
+        transparent;
+}
+
+.button-clicked {
+    animation:
+        buttonClick 0.25s ease;
+}
+
+@keyframes buttonClick {
+
+    0% {
+        transform:
+            scale(1);
+    }
+
+    50% {
+        transform:
+            scale(0.96);
+    }
+
+    100% {
+        transform:
+            scale(1);
+    }
+}
+
+
+/* ---------------------------------------------------------
+   HERO MOUSE DEPTH
+--------------------------------------------------------- */
+
+.hero .earth {
+    will-change:
+        transform;
+
+    transition:
+        transform 0.18s
+        ease-out;
+}
+
+
+/* ---------------------------------------------------------
+   FLOATING CARD LIGHT
+--------------------------------------------------------- */
+
+.destination-card:hover
+.card-content {
+    transform:
+        translateZ(28px);
+}
+
+
+/* ---------------------------------------------------------
+   PLANNER DEPTH
+--------------------------------------------------------- */
+
+.planner-form,
+.planner-result {
+    transition:
+        transform 0.4s ease,
+        border-color 0.4s ease,
+        box-shadow 0.4s ease;
+}
+
+.planner-form:hover,
+.planner-result:hover {
+    border-color:
+        rgba(
+            56,
+            167,
+            255,
+            0.22
+        );
+
+    box-shadow:
+        0 30px 80px
+        rgba(0, 0, 0, 0.45),
+        0 0 35px
+        rgba(
+            56,
+            167,
+            255,
+            0.06
+        );
+}
+
+
+/* ---------------------------------------------------------
+   COUNTER GLOW
+--------------------------------------------------------- */
+
+.hero-stats strong {
+    display: inline-block;
+
+    min-width: 55px;
+
+    color: white;
+
+    text-shadow:
+        0 0 20px
+        rgba(
+            56,
+            167,
+            255,
+            0.25
+        );
+
+    transition:
+        0.3s ease;
+}
+
+.hero-stats div:hover strong {
+    color:
+        #67c8ff;
+
+    transform:
+        translateY(-3px);
+}
+
+
+/* ---------------------------------------------------------
+   MOBILE SAFETY
+--------------------------------------------------------- */
+
+@media (max-width: 800px) {
+
+    .reveal-item {
+        transform:
+            translateY(25px);
+    }
+
+    .destination-card {
+        transform:
+            none !important;
+    }
+
+    .destination-card:hover {
+        transform:
+            translateY(-7px) !important;
+    }
+}
+
+
+/* ---------------------------------------------------------
+   REDUCED MOTION
+--------------------------------------------------------- */
+
+@media (prefers-reduced-motion: reduce) {
+
+    .reveal-item {
+        opacity: 1;
+
+        transform: none;
+
+        transition: none;
+    }
+
+    .destination-card,
+    .hero .earth {
+        transform: none !important;
+
+        transition: none;
+    }
+}
 }
