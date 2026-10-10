@@ -2545,5 +2545,98 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         );
     });
+/* =========================================
+   COMMIT 14 — DARK / LIGHT THEME SYSTEM
+   TravelSphere
+========================================= */
 
+(() => {
+    "use strict";
+
+    const STORAGE_KEY = "travelsphere_theme";
+
+    function getSavedTheme() {
+        try {
+            const savedTheme = localStorage.getItem(STORAGE_KEY);
+
+            if (savedTheme === "dark" || savedTheme === "light") {
+                return savedTheme;
+            }
+        } catch (error) {
+            console.warn("Theme preference could not be loaded.");
+        }
+
+        return "dark";
+    }
+
+    function applyTheme(theme) {
+        const selectedTheme =
+            theme === "light" ? "light" : "dark";
+
+        document.documentElement.dataset.theme = selectedTheme;
+
+        const toggle = document.getElementById("themeToggle");
+        const icon = document.getElementById("themeIcon");
+        const label = document.getElementById("themeLabel");
+
+        if (toggle) {
+            toggle.setAttribute(
+                "aria-pressed",
+                String(selectedTheme === "light")
+            );
+
+            toggle.setAttribute(
+                "aria-label",
+                `Switch to ${selectedTheme === "dark" ? "light" : "dark"} mode`
+            );
+        }
+
+        if (icon) {
+            icon.textContent =
+                selectedTheme === "dark" ? "☀️" : "🌙";
+        }
+
+        if (label) {
+            label.textContent =
+                selectedTheme === "dark" ? "Light Mode" : "Dark Mode";
+        }
+
+        try {
+            localStorage.setItem(STORAGE_KEY, selectedTheme);
+        } catch (error) {
+            console.warn("Theme preference could not be saved.");
+        }
+    }
+
+    function initializeThemeToggle() {
+        applyTheme(getSavedTheme());
+
+        const toggle = document.getElementById("themeToggle");
+
+        if (!toggle || toggle.dataset.themeReady === "true") {
+            return;
+        }
+
+        toggle.dataset.themeReady = "true";
+
+        toggle.addEventListener("click", () => {
+            const currentTheme =
+                document.documentElement.dataset.theme || "dark";
+
+            applyTheme(
+                currentTheme === "dark" ? "light" : "dark"
+            );
+        });
+    }
+
+    if (document.readyState === "loading") {
+        document.addEventListener(
+            "DOMContentLoaded",
+            initializeThemeToggle,
+            { once: true }
+        );
+    } else {
+        initializeThemeToggle();
+    }
+})();
 });
